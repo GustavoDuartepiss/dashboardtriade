@@ -72,7 +72,7 @@ export default function Templates() {
       toast.success('Template criado!');
     }
 
-    setFormData({ name: '', category: 'custom', content: '', isFavorite: false });
+    setFormData({ name: '', category: 'custom', content: '', isFavorite: false, leadTemperature: 'morno', idealMoment: '', objective: 'avancar' });
     setEditingTemplate(null);
     setIsOpen(false);
   };
