@@ -47,6 +47,9 @@ export default function Templates() {
     category: 'custom' as Template['category'],
     content: '',
     isFavorite: false,
+    leadTemperature: 'morno' as Template['leadTemperature'],
+    idealMoment: '',
+    objective: 'avancar' as Template['objective'],
   });
 
   useEffect(() => {
@@ -69,7 +72,7 @@ export default function Templates() {
       toast.success('Template criado!');
     }
 
-    setFormData({ name: '', category: 'custom', content: '', isFavorite: false });
+    setFormData({ name: '', category: 'custom', content: '', isFavorite: false, leadTemperature: 'morno', idealMoment: '', objective: 'avancar' });
     setEditingTemplate(null);
     setIsOpen(false);
   };
@@ -81,6 +84,9 @@ export default function Templates() {
       category: template.category,
       content: template.content,
       isFavorite: template.isFavorite,
+      leadTemperature: template.leadTemperature || 'morno',
+      idealMoment: template.idealMoment || '',
+      objective: template.objective || 'avancar',
     });
     setIsOpen(true);
   };
@@ -132,7 +138,7 @@ export default function Templates() {
             setIsOpen(open);
             if (!open) {
               setEditingTemplate(null);
-              setFormData({ name: '', category: 'custom', content: '', isFavorite: false });
+              setFormData({ name: '', category: 'custom', content: '', isFavorite: false, leadTemperature: 'morno', idealMoment: '', objective: 'avancar' });
             }
           }}>
             <DialogTrigger asChild>
