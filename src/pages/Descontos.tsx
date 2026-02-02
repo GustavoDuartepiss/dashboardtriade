@@ -47,6 +47,10 @@ export default function Descontos() {
     type: 'parceria' as Discount['type'],
     code: '',
     description: '',
+    maxPercentage: 0,
+    acceptableSituations: [] as string[],
+    requiredCounterpart: '',
+    prohibitedSituations: [] as string[],
   });
 
   useEffect(() => {
