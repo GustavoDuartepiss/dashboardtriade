@@ -219,10 +219,18 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="w-full justify-start gap-3 jarvis-border"
-                onClick={() => navigate('/follow-ups')}
+                onClick={() => navigate('/objecoes')}
               >
                 <MessageSquare className="h-4 w-4 text-primary" />
-                Ver Follow-ups
+                Ver Objeções
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-3 jarvis-border"
+                onClick={() => navigate('/descontos')}
+              >
+                <Zap className="h-4 w-4 text-primary" />
+                Pegar Cupom
               </Button>
               <Button 
                 variant="outline" 
@@ -239,14 +247,6 @@ export default function Dashboard() {
               >
                 <Target className="h-4 w-4 text-primary" />
                 Atualizar Meta
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-3 jarvis-border"
-                onClick={() => navigate('/objecoes')}
-              >
-                <Target className="h-4 w-4 text-primary" />
-                Ver Objeções
               </Button>
             </div>
           </JarvisCard>
