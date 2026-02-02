@@ -84,6 +84,9 @@ export default function Templates() {
       category: template.category,
       content: template.content,
       isFavorite: template.isFavorite,
+      leadTemperature: template.leadTemperature || 'morno',
+      idealMoment: template.idealMoment || '',
+      objective: template.objective || 'avancar',
     });
     setIsOpen(true);
   };
