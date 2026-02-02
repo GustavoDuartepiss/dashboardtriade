@@ -47,6 +47,9 @@ export default function Templates() {
     category: 'custom' as Template['category'],
     content: '',
     isFavorite: false,
+    leadTemperature: 'morno' as Template['leadTemperature'],
+    idealMoment: '',
+    objective: 'avancar' as Template['objective'],
   });
 
   useEffect(() => {
