@@ -65,7 +65,7 @@ export default function Descontos() {
 
     const saved = saveDiscount(formData);
     setDiscounts(prev => [...prev, saved]);
-    setFormData({ period: 'mensal', type: 'parceria', code: '', description: '' });
+    setFormData({ period: 'mensal', type: 'parceria', code: '', description: '', maxPercentage: 0, acceptableSituations: [], requiredCounterpart: '', prohibitedSituations: [] });
     setIsOpen(false);
     toast.success('Desconto salvo!');
   };

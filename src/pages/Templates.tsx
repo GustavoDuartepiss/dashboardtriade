@@ -138,7 +138,7 @@ export default function Templates() {
             setIsOpen(open);
             if (!open) {
               setEditingTemplate(null);
-              setFormData({ name: '', category: 'custom', content: '', isFavorite: false });
+              setFormData({ name: '', category: 'custom', content: '', isFavorite: false, leadTemperature: 'morno', idealMoment: '', objective: 'avancar' });
             }
           }}>
             <DialogTrigger asChild>
