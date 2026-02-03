@@ -109,6 +109,76 @@ export interface JarvisConfig {
   };
 }
 
+// ============================================
+// NOVOS TIPOS - PLAYBOOK COMPLETO
+// ============================================
+
+// PLANOS E VALORES
+export interface Plan {
+  id: string;
+  name: string;
+  type: 'mensal' | 'trimestral' | 'semestral' | 'anual';
+  fullPrice: number;
+  promoPrice: number | null;
+  discountRules: string;
+  whenToOffer: string;
+  whenNotToOffer: string;
+  createdAt: string;
+}
+
+// FOLLOW-UP ESTRATÉGICO (CENÁRIOS)
+export interface FollowUpScenario {
+  id: string;
+  scenario: string;
+  channel: 'whatsapp' | 'ligacao' | 'email';
+  suggestedMessage: string;
+  attempts: number;
+  intervalDays: number;
+  createdAt: string;
+}
+
+// SCORE DE LEAD
+export interface LeadScoreRule {
+  id: string;
+  type: 'aumenta' | 'diminui';
+  criteria: string;
+  points: number;
+  createdAt: string;
+}
+
+export interface LeadScoreConfig {
+  minimumToClose: number;
+  ranges: {
+    low: { min: number; max: number; recommendation: string };
+    medium: { min: number; max: number; recommendation: string };
+    high: { min: number; max: number; recommendation: string };
+  };
+}
+
+// OTE E COMISSÕES
+export interface OTEConfig {
+  id: string;
+  monthlyGoal: number;
+  baseCommission: number;
+  accelerators: OTEAccelerator[];
+  penalties: OTEPenalty[];
+  calculationRules: string;
+  jarvisGuidance: string;
+  createdAt: string;
+}
+
+export interface OTEAccelerator {
+  threshold: number;
+  multiplier: number;
+  description: string;
+}
+
+export interface OTEPenalty {
+  condition: string;
+  penalty: number;
+  description: string;
+}
+
 const STORAGE_KEYS = {
   followUps: 'jarvis_followups',
   templates: 'jarvis_templates',
@@ -118,6 +188,12 @@ const STORAGE_KEYS = {
   closingRules: 'jarvis_closing_rules',
   smartAlerts: 'jarvis_smart_alerts',
   jarvisConfig: 'jarvis_config',
+  // NOVOS KEYS - PLAYBOOK
+  plans: 'jarvis_plans',
+  followUpScenarios: 'jarvis_followup_scenarios',
+  leadScoreRules: 'jarvis_lead_score_rules',
+  leadScoreConfig: 'jarvis_lead_score_config',
+  oteConfig: 'jarvis_ote_config',
 };
 
 // ============================================
