@@ -6,6 +6,7 @@ interface JarvisCardProps {
   className?: string;
   glow?: boolean;
   title?: string;
+  description?: string;
   icon?: ReactNode;
   action?: ReactNode;
 }
@@ -15,6 +16,7 @@ export function JarvisCard({
   className, 
   glow = false,
   title,
+  description,
   icon,
   action
 }: JarvisCardProps) {
@@ -34,9 +36,14 @@ export function JarvisCard({
                 {icon}
               </div>
             )}
-            {title && (
-              <h3 className="font-semibold text-lg">{title}</h3>
-            )}
+            <div>
+              {title && (
+                <h3 className="font-semibold text-lg">{title}</h3>
+              )}
+              {description && (
+                <p className="text-sm text-muted-foreground">{description}</p>
+              )}
+            </div>
           </div>
           {action}
         </div>

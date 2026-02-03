@@ -11,6 +11,7 @@ import Metas from "./pages/Metas";
 import Objecoes from "./pages/Objecoes";
 import Jarvis from "./pages/Jarvis";
 import Configuracoes from "./pages/Configuracoes";
+import Playbook from "./pages/Playbook";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/objecoes" element={<Objecoes />} />
           <Route path="/jarvis" element={<Jarvis />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
+          <Route path="/playbook" element={<Playbook />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

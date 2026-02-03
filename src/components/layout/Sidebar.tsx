@@ -11,12 +11,14 @@ import {
   Menu,
   X,
   Zap,
-  Settings
+  Settings,
+  Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/playbook', label: 'Playbook', icon: Brain },
   { path: '/follow-ups', label: 'Follow-ups', icon: MessageSquare },
   { path: '/templates', label: 'Templates', icon: FileText },
   { path: '/descontos', label: 'Descontos', icon: Percent },
