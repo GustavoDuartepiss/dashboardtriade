@@ -728,6 +728,139 @@ export function calculateDailyGoal(target: number, achieved: number): number {
 }
 
 // ============================================
+// PLANS - PLANOS E VALORES
+// ============================================
+
+export function getPlans(): Plan[] {
+  return getFromStorage<Plan>(STORAGE_KEYS.plans, []);
+}
+
+export function savePlan(plan: Omit<Plan, 'id' | 'createdAt'>): Plan {
+  const plans = getPlans();
+  const newPlan: Plan = {
+    ...plan,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+  };
+  plans.push(newPlan);
+  saveToStorage(STORAGE_KEYS.plans, plans);
+  return newPlan;
+}
+
+export function updatePlan(id: string, data: Partial<Plan>): void {
+  const plans = getPlans();
+  const index = plans.findIndex(p => p.id === id);
+  if (index !== -1) {
+    plans[index] = { ...plans[index], ...data };
+    saveToStorage(STORAGE_KEYS.plans, plans);
+  }
+}
+
+export function deletePlan(id: string): void {
+  const plans = getPlans().filter(p => p.id !== id);
+  saveToStorage(STORAGE_KEYS.plans, plans);
+}
+
+// ============================================
+// FOLLOW-UP SCENARIOS - CENÁRIOS DE FOLLOW-UP
+// ============================================
+
+export function getFollowUpScenarios(): FollowUpScenario[] {
+  return getFromStorage<FollowUpScenario>(STORAGE_KEYS.followUpScenarios, []);
+}
+
+export function saveFollowUpScenario(scenario: Omit<FollowUpScenario, 'id' | 'createdAt'>): FollowUpScenario {
+  const scenarios = getFollowUpScenarios();
+  const newScenario: FollowUpScenario = {
+    ...scenario,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+  };
+  scenarios.push(newScenario);
+  saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
+  return newScenario;
+}
+
+export function updateFollowUpScenario(id: string, data: Partial<FollowUpScenario>): void {
+  const scenarios = getFollowUpScenarios();
+  const index = scenarios.findIndex(s => s.id === id);
+  if (index !== -1) {
+    scenarios[index] = { ...scenarios[index], ...data };
+    saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
+  }
+}
+
+export function deleteFollowUpScenario(id: string): void {
+  const scenarios = getFollowUpScenarios().filter(s => s.id !== id);
+  saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
+}
+
+// ============================================
+// LEAD SCORE - REGRAS E CONFIGURAÇÃO
+// ============================================
+
+export function getLeadScoreRules(): LeadScoreRule[] {
+  return getFromStorage<LeadScoreRule>(STORAGE_KEYS.leadScoreRules, []);
+}
+
+export function saveLeadScoreRule(rule: Omit<LeadScoreRule, 'id' | 'createdAt'>): LeadScoreRule {
+  const rules = getLeadScoreRules();
+  const newRule: LeadScoreRule = {
+    ...rule,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+  };
+  rules.push(newRule);
+  saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
+  return newRule;
+}
+
+export function deleteLeadScoreRule(id: string): void {
+  const rules = getLeadScoreRules().filter(r => r.id !== id);
+  saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
+}
+
+export function getLeadScoreConfig(): LeadScoreConfig {
+  return getObjectFromStorage<LeadScoreConfig>(STORAGE_KEYS.leadScoreConfig, {
+    minimumToClose: 70,
+    ranges: {
+      low: { min: 0, max: 39, recommendation: 'Nutrir com conteúdo, não investir tempo direto' },
+      medium: { min: 40, max: 69, recommendation: 'Qualificar melhor, buscar sinais de compra' },
+      high: { min: 70, max: 100, recommendation: 'Priorizar fechamento, ação imediata' },
+    },
+  });
+}
+
+export function saveLeadScoreConfig(config: LeadScoreConfig): void {
+  saveObjectToStorage(STORAGE_KEYS.leadScoreConfig, config);
+}
+
+// ============================================
+// OTE CONFIG - COMISSÕES E ACELERADORES
+// ============================================
+
+export function getOTEConfig(): OTEConfig | null {
+  return getObjectFromStorage<OTEConfig | null>(STORAGE_KEYS.oteConfig, null);
+}
+
+export function saveOTEConfig(config: Omit<OTEConfig, 'id' | 'createdAt'>): OTEConfig {
+  const newConfig: OTEConfig = {
+    ...config,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+  };
+  saveObjectToStorage(STORAGE_KEYS.oteConfig, newConfig);
+  return newConfig;
+}
+
+export function updateOTEConfig(data: Partial<OTEConfig>): void {
+  const current = getOTEConfig();
+  if (current) {
+    saveObjectToStorage(STORAGE_KEYS.oteConfig, { ...current, ...data });
+  }
+}
+
+// ============================================
 // GET ALL DATA FOR AI - CONTEXTO COMPLETO
 // ============================================
 
@@ -742,6 +875,12 @@ export function getAllDataForAI(): {
   jarvisConfig: JarvisConfig;
   currentGoal: Goal | null;
   workingDaysRemaining: number;
+  // NOVOS DADOS DO PLAYBOOK
+  plans: Plan[];
+  followUpScenarios: FollowUpScenario[];
+  leadScoreRules: LeadScoreRule[];
+  leadScoreConfig: LeadScoreConfig;
+  oteConfig: OTEConfig | null;
 } {
   return {
     followUps: getFollowUps(),
@@ -754,5 +893,79 @@ export function getAllDataForAI(): {
     jarvisConfig: getJarvisConfig(),
     currentGoal: getCurrentMonthGoal(),
     workingDaysRemaining: calculateWorkingDaysRemaining(),
+    // NOVOS DADOS DO PLAYBOOK
+    plans: getPlans(),
+    followUpScenarios: getFollowUpScenarios(),
+    leadScoreRules: getLeadScoreRules(),
+    leadScoreConfig: getLeadScoreConfig(),
+    oteConfig: getOTEConfig(),
   };
+}
+
+// ============================================
+// IMPORT/EXPORT - IMPORTAÇÃO E EXPORTAÇÃO JSON
+// ============================================
+
+export interface PlaybookExport {
+  version: string;
+  exportedAt: string;
+  data: {
+    objections: Objection[];
+    closingRules: ClosingRule[];
+    plans: Plan[];
+    discounts: Discount[];
+    templates: Template[];
+    followUpScenarios: FollowUpScenario[];
+    leadScoreRules: LeadScoreRule[];
+    leadScoreConfig: LeadScoreConfig;
+    oteConfig: OTEConfig | null;
+  };
+}
+
+export function exportPlaybook(): PlaybookExport {
+  return {
+    version: '1.0',
+    exportedAt: new Date().toISOString(),
+    data: {
+      objections: getObjections(),
+      closingRules: getClosingRules(),
+      plans: getPlans(),
+      discounts: getDiscounts(),
+      templates: getTemplates(),
+      followUpScenarios: getFollowUpScenarios(),
+      leadScoreRules: getLeadScoreRules(),
+      leadScoreConfig: getLeadScoreConfig(),
+      oteConfig: getOTEConfig(),
+    },
+  };
+}
+
+export function importPlaybook(data: PlaybookExport): void {
+  if (data.data.objections) {
+    saveToStorage(STORAGE_KEYS.objections, data.data.objections);
+  }
+  if (data.data.closingRules) {
+    saveToStorage(STORAGE_KEYS.closingRules, data.data.closingRules);
+  }
+  if (data.data.plans) {
+    saveToStorage(STORAGE_KEYS.plans, data.data.plans);
+  }
+  if (data.data.discounts) {
+    saveToStorage(STORAGE_KEYS.discounts, data.data.discounts);
+  }
+  if (data.data.templates) {
+    saveToStorage(STORAGE_KEYS.templates, data.data.templates);
+  }
+  if (data.data.followUpScenarios) {
+    saveToStorage(STORAGE_KEYS.followUpScenarios, data.data.followUpScenarios);
+  }
+  if (data.data.leadScoreRules) {
+    saveToStorage(STORAGE_KEYS.leadScoreRules, data.data.leadScoreRules);
+  }
+  if (data.data.leadScoreConfig) {
+    saveObjectToStorage(STORAGE_KEYS.leadScoreConfig, data.data.leadScoreConfig);
+  }
+  if (data.data.oteConfig) {
+    saveObjectToStorage(STORAGE_KEYS.oteConfig, data.data.oteConfig);
+  }
 }
