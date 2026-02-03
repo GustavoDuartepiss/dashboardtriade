@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/metas" element={<Metas />} />
           <Route path="/objecoes" element={<Objecoes />} />
           <Route path="/jarvis" element={<Jarvis />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
