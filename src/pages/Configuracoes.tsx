@@ -149,34 +149,33 @@ export default function Configuracoes() {
       return;
     }
 
-    const alert: SmartAlert = {
-      id: Date.now().toString(),
+    const alert = saveSmartAlert({
       trigger: newAlert.trigger,
+      reason: newAlert.reason || '',
       suggestedAction: newAlert.suggestedAction,
-      priority: newAlert.priority as 'low' | 'medium' | 'high',
+      priority: newAlert.priority as 'baixa' | 'media' | 'alta' | 'critica',
       isActive: true,
-    };
+    });
 
-    const updated = [...alerts, alert];
-    setAlerts(updated);
-    saveSmartAlerts(updated);
-    setNewAlert({ trigger: '', suggestedAction: '', priority: 'medium', isActive: true });
+    setAlerts([...alerts, alert]);
+    setNewAlert({ trigger: '', reason: '', suggestedAction: '', priority: 'media', isActive: true });
     setIsAlertDialogOpen(false);
     toast.success('Alerta inteligente criado');
   };
 
   const handleToggleAlert = (id: string) => {
-    const updated = alerts.map(a => 
-      a.id === id ? { ...a, isActive: !a.isActive } : a
-    );
-    setAlerts(updated);
-    saveSmartAlerts(updated);
+    const alert = alerts.find(a => a.id === id);
+    if (alert) {
+      updateSmartAlert(id, { isActive: !alert.isActive });
+      setAlerts(alerts.map(a => 
+        a.id === id ? { ...a, isActive: !a.isActive } : a
+      ));
+    }
   };
 
   const handleDeleteAlert = (id: string) => {
-    const updated = alerts.filter(a => a.id !== id);
-    setAlerts(updated);
-    saveSmartAlerts(updated);
+    deleteSmartAlert(id);
+    setAlerts(alerts.filter(a => a.id !== id));
     toast.success('Alerta removido');
   };
 
