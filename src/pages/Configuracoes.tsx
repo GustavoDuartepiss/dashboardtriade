@@ -312,10 +312,10 @@ export default function Configuracoes() {
 
                   <div className="space-y-2">
                     <Label>Prioridade</Label>
-                    <Select
-                      value={newAlert.priority}
-                      onValueChange={(v) => setNewAlert({ ...newAlert, priority: v as 'low' | 'medium' | 'high' })}
-                    >
+                      <Select
+                        value={newAlert.priority}
+                        onValueChange={(v) => setNewAlert({ ...newAlert, priority: v as 'baixa' | 'media' | 'alta' | 'critica' })}
+                      >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
