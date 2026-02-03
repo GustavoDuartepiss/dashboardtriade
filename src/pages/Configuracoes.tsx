@@ -91,9 +91,10 @@ const ALERT_TRIGGERS = [
 ];
 
 const PRIORITY_OPTIONS = [
-  { value: 'low', label: 'Baixa', color: 'bg-muted text-muted-foreground' },
-  { value: 'medium', label: 'Média', color: 'bg-warning/20 text-warning' },
-  { value: 'high', label: 'Alta', color: 'bg-destructive/20 text-destructive' },
+  { value: 'baixa', label: 'Baixa', color: 'bg-muted text-muted-foreground' },
+  { value: 'media', label: 'Média', color: 'bg-warning/20 text-warning' },
+  { value: 'alta', label: 'Alta', color: 'bg-destructive/20 text-destructive' },
+  { value: 'critica', label: 'Crítica', color: 'bg-destructive text-destructive-foreground' },
 ];
 
 export default function Configuracoes() {
@@ -101,13 +102,25 @@ export default function Configuracoes() {
   const [config, setConfig] = useState<JarvisConfig>({
     activeMode: 'closer',
     autoModeSwitch: false,
-    principles: [],
+    personality: {
+      actAs: ['Closer sênior', 'Líder comercial'],
+      principles: [
+        'Valor antes de preço - SEMPRE',
+        'Nunca implorar fechamento',
+        'Nunca dar desconto sem contrapartida',
+        'Sempre conduzir para próximo passo',
+        'Testar compromisso antes de avançar',
+      ],
+      canDo: ['Corrigir abordagens fracas', 'Alertar sobre erros', 'Questionar decisões'],
+      cannotDo: ['Ser submisso', 'Responder como chatbot genérico'],
+    },
   });
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [newAlert, setNewAlert] = useState<Partial<SmartAlert>>({
     trigger: '',
+    reason: '',
     suggestedAction: '',
-    priority: 'medium',
+    priority: 'media',
     isActive: true,
   });
 
