@@ -97,6 +97,14 @@ ${context.closingRules?.map((r: any) =>
     💡 Razão: ${r.strategicReason}`
 ).join('\n\n') || 'Nenhuma regra cadastrada'}
 
+### PLANOS E VALORES (${context.plans?.length || 0} planos)
+${context.plans?.map((p: any) => 
+  `- ${p.name} (${p.type}): R$ ${p.fullPrice?.toLocaleString('pt-BR')}${p.promoPrice ? ` / Promo: R$ ${p.promoPrice?.toLocaleString('pt-BR')}` : ''}
+    Quando ofertar: ${p.whenToOffer || 'Não definido'}
+    Não ofertar: ${p.whenNotToOffer || 'Não definido'}
+    Regras de desconto: ${p.discountRules || 'Não definido'}`
+).join('\n\n') || 'Nenhum plano cadastrado'}
+
 ### POLÍTICA DE DESCONTOS
 ${context.discounts?.length > 0 ? context.discounts.map((d: any) => 
   `- ${d.period} (${d.type}): ${d.code}
@@ -105,6 +113,32 @@ ${context.discounts?.length > 0 ? context.discounts.map((d: any) =>
     Contrapartida: ${d.requiredCounterpart || 'Não definida'}
     Proibido: ${d.prohibitedSituations?.join(', ') || 'Não especificado'}`
 ).join('\n') : 'Nenhum desconto cadastrado'}
+
+### CENÁRIOS DE FOLLOW-UP (${context.followUpScenarios?.length || 0})
+${context.followUpScenarios?.map((f: any) => 
+  `- ${f.scenario} [${f.channel}]
+    Tentativas: ${f.attempts}x a cada ${f.intervalDays} dias
+    Mensagem: ${f.suggestedMessage}`
+).join('\n\n') || 'Nenhum cenário cadastrado'}
+
+### SCORE DE LEAD
+- Mínimo para fechamento: ${context.leadScoreConfig?.minimumToClose || 70} pontos
+- Faixa baixa (0-39): ${context.leadScoreConfig?.ranges?.low?.recommendation || 'Nutrir com conteúdo'}
+- Faixa média (40-69): ${context.leadScoreConfig?.ranges?.medium?.recommendation || 'Qualificar melhor'}
+- Faixa alta (70+): ${context.leadScoreConfig?.ranges?.high?.recommendation || 'Priorizar fechamento'}
+
+### REGRAS DE SCORE (${context.leadScoreRules?.length || 0})
+${context.leadScoreRules?.map((r: any) => 
+  `- ${r.type === 'aumenta' ? '📈' : '📉'} ${r.criteria}: ${r.type === 'aumenta' ? '+' : '-'}${r.points} pts`
+).join('\n') || 'Nenhuma regra de score'}
+
+### OTE / COMISSÕES
+${context.oteConfig ? `
+- Meta mensal: R$ ${context.oteConfig.monthlyGoal?.toLocaleString('pt-BR')}
+- Comissão base: ${context.oteConfig.baseCommission}%
+- Regras de cálculo: ${context.oteConfig.calculationRules}
+- Orientação Jarvis: ${context.oteConfig.jarvisGuidance}
+` : 'Configuração de OTE não definida'}
 
 ### TEMPLATES DISPONÍVEIS (${context.templates?.length || 0})
 ${context.templates?.slice(0, 5).map((t: any) => 
