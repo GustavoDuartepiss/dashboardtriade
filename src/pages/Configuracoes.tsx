@@ -36,7 +36,9 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { 
   getSmartAlerts, 
-  saveSmartAlerts, 
+  saveSmartAlert, 
+  updateSmartAlert,
+  deleteSmartAlert,
   getJarvisConfig, 
   saveJarvisConfig,
   type SmartAlert,
