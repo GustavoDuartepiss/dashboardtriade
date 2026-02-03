@@ -10,6 +10,7 @@ import Descontos from "./pages/Descontos";
 import Metas from "./pages/Metas";
 import Objecoes from "./pages/Objecoes";
 import Jarvis from "./pages/Jarvis";
+import Configuracoes from "./pages/Configuracoes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/metas" element={<Metas />} />
           <Route path="/objecoes" element={<Objecoes />} />
           <Route path="/jarvis" element={<Jarvis />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

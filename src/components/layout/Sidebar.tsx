@@ -10,7 +10,8 @@ import {
   Bot,
   Menu,
   X,
-  Zap
+  Zap,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ const navItems = [
   { path: '/metas', label: 'Metas', icon: Target },
   { path: '/objecoes', label: 'Objeções', icon: AlertTriangle },
   { path: '/jarvis', label: 'Jarvis IA', icon: Bot },
+  { path: '/configuracoes', label: 'Configurações', icon: Settings },
 ];
 
 export function Sidebar() {
