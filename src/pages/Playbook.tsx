@@ -72,7 +72,6 @@ interface UndoAction {
 }
 
 export default function Playbook() {
-  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Estado para cada seção
@@ -84,12 +83,52 @@ export default function Playbook() {
   const [leadScoreConfig, setLeadScoreConfigState] = useState<LeadScoreConfig>(getLeadScoreConfig());
   const [oteConfig, setOteConfigState] = useState<OTEConfig | null>(getOTEConfig());
 
+  // Undo stack
+  const [undoStack, setUndoStack] = useState<UndoAction[]>([]);
+
   // Forms state
   const [showObjectionForm, setShowObjectionForm] = useState(false);
   const [showClosingRuleForm, setShowClosingRuleForm] = useState(false);
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showFollowUpForm, setShowFollowUpForm] = useState(false);
   const [showScoreRuleForm, setShowScoreRuleForm] = useState(false);
+
+  // Undo handler
+  const pushUndo = useCallback((action: UndoAction) => {
+    setUndoStack(prev => [...prev.slice(-9), action]);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+
+    const lastAction = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+
+    switch (lastAction.type) {
+      case 'objection':
+        restoreObjection(lastAction.item as Objection);
+        setObjections(getObjections());
+        break;
+      case 'closingRule':
+        restoreClosingRule(lastAction.item as ClosingRule);
+        setClosingRules(getClosingRules());
+        break;
+      case 'plan':
+        restorePlan(lastAction.item as Plan);
+        setPlans(getPlans());
+        break;
+      case 'followUpScenario':
+        restoreFollowUpScenario(lastAction.item as FollowUpScenario);
+        setFollowUpScenarios(getFollowUpScenarios());
+        break;
+      case 'leadScoreRule':
+        restoreLeadScoreRule(lastAction.item as LeadScoreRule);
+        setLeadScoreRules(getLeadScoreRules());
+        break;
+    }
+
+    toast.success('Ação desfeita!');
+  }, [undoStack]);
 
   // Handle Export
   const handleExport = () => {
@@ -101,7 +140,7 @@ export default function Playbook() {
     a.download = `playbook-jarvis-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast({ title: 'Playbook exportado!', description: 'Arquivo JSON baixado com sucesso.' });
+    toast.success('Playbook exportado!');
   };
 
   // Handle Import
