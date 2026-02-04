@@ -730,9 +730,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'followUpScenario', item: scenario });
                                 deleteFollowUpScenario(scenario.id);
                                 setFollowUpScenarios(getFollowUpScenarios());
-                                toast({ title: 'Cenário removido' });
+                                toast.success('Cenário removido');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
