@@ -469,6 +469,15 @@ export function deleteObjection(id: string): void {
   saveToStorage(STORAGE_KEYS.objections, objections);
 }
 
+export function restoreObjection(objection: Objection): void {
+  const objections = getObjections();
+  // Verifica se já não existe para evitar duplicatas
+  if (!objections.find(o => o.id === objection.id)) {
+    objections.push(objection);
+    saveToStorage(STORAGE_KEYS.objections, objections);
+  }
+}
+
 // ============================================
 // CLOSING RULES - REGRAS DE FECHAMENTO
 // ============================================
