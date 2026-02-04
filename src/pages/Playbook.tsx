@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { JarvisCard } from '@/components/ui/JarvisCard';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { 
   Brain, 
   Shield, 
@@ -20,8 +20,7 @@ import {
   Trash2,
   Download,
   Upload,
-  BookOpen,
-  Zap
+  Undo2
 } from 'lucide-react';
 import {
   Objection,
@@ -31,23 +30,26 @@ import {
   LeadScoreRule,
   LeadScoreConfig,
   OTEConfig,
-  OTEAccelerator,
-  OTEPenalty,
   getObjections,
   saveObjection,
   deleteObjection,
+  restoreObjection,
   getClosingRules,
   saveClosingRule,
   deleteClosingRule,
+  restoreClosingRule,
   getPlans,
   savePlan,
   deletePlan,
+  restorePlan,
   getFollowUpScenarios,
   saveFollowUpScenario,
   deleteFollowUpScenario,
+  restoreFollowUpScenario,
   getLeadScoreRules,
   saveLeadScoreRule,
   deleteLeadScoreRule,
+  restoreLeadScoreRule,
   getLeadScoreConfig,
   saveLeadScoreConfig,
   getOTEConfig,
@@ -57,6 +59,15 @@ import {
   importPlaybook,
   PlaybookExport,
 } from '@/lib/storage';
+
+// Tipos para undo
+type UndoableItem = Objection | ClosingRule | Plan | FollowUpScenario | LeadScoreRule;
+type UndoType = 'objection' | 'closingRule' | 'plan' | 'followUpScenario' | 'leadScoreRule';
+
+interface UndoAction {
+  type: UndoType;
+  item: UndoableItem;
+}
 
 export default function Playbook() {
   const { toast } = useToast();
