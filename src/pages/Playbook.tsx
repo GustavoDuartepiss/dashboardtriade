@@ -271,7 +271,7 @@ export default function Playbook() {
     setLeadScoreRules(getLeadScoreRules());
     setShowScoreRuleForm(false);
     form.reset();
-    toast({ title: 'Regra de score cadastrada!' });
+    toast.success('Regra de score cadastrada!');
   };
 
   // Lead Score Config handlers
