@@ -277,7 +277,7 @@ export default function Playbook() {
   // Lead Score Config handlers
   const handleSaveScoreConfig = () => {
     saveLeadScoreConfig(leadScoreConfig);
-    toast({ title: 'Configuração de score salva!' });
+    toast.success('Configuração de score salva!');
   };
 
   // OTE Config handlers
