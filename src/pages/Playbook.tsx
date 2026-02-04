@@ -20,7 +20,9 @@ import {
   Trash2,
   Download,
   Upload,
-  Undo2
+  Undo2,
+  Zap,
+  BookOpen
 } from 'lucide-react';
 import {
   Objection,
