@@ -302,7 +302,7 @@ export default function Playbook() {
     }
     
     setOteConfigState(getOTEConfig());
-    toast({ title: 'Configuração OTE salva!' });
+    toast.success('Configuração OTE salva!');
   };
 
   return (
