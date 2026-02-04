@@ -820,6 +820,14 @@ export function deleteFollowUpScenario(id: string): void {
   saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
 }
 
+export function restoreFollowUpScenario(scenario: FollowUpScenario): void {
+  const scenarios = getFollowUpScenarios();
+  if (!scenarios.find(s => s.id === scenario.id)) {
+    scenarios.push(scenario);
+    saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
+  }
+}
+
 // ============================================
 // LEAD SCORE - REGRAS E CONFIGURAÇÃO
 // ============================================
