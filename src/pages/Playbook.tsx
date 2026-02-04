@@ -438,9 +438,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'objection', item: obj });
                                 deleteObjection(obj.id);
                                 setObjections(getObjections());
-                                toast({ title: 'Objeção removida' });
+                                toast.success('Objeção removida');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
