@@ -161,9 +161,9 @@ export default function Playbook() {
         setLeadScoreRules(getLeadScoreRules());
         setLeadScoreConfigState(getLeadScoreConfig());
         setOteConfigState(getOTEConfig());
-        toast({ title: 'Playbook importado!', description: 'Todos os dados foram atualizados.' });
+        toast.success('Playbook importado!');
       } catch {
-        toast({ title: 'Erro na importação', description: 'Arquivo JSON inválido.', variant: 'destructive' });
+        toast.error('Arquivo JSON inválido');
       }
     };
     reader.readAsText(file);
