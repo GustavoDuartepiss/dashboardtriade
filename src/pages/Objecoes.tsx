@@ -144,7 +144,7 @@ export default function Objecoes() {
     <MainLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold">
               <span className="gradient-text">Objeções</span>
@@ -153,6 +153,13 @@ export default function Objecoes() {
               Unidades de decisão estratégicas para contornar objeções
             </p>
           </div>
+          <div className="flex gap-2">
+            {undoStack.length > 0 && (
+              <Button variant="outline" onClick={handleUndo} className="gap-2">
+                <Undo2 className="h-4 w-4" />
+                Desfazer ({undoStack.length})
+              </Button>
+            )}
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2 bg-primary hover:bg-primary/90">
