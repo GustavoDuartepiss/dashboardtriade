@@ -319,7 +319,13 @@ export default function Playbook() {
               Playbook estratégico do Jarvis — base de conhecimento para decisões de vendas
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            {undoStack.length > 0 && (
+              <Button variant="outline" onClick={handleUndo} className="gap-2">
+                <Undo2 className="h-4 w-4" />
+                Desfazer ({undoStack.length})
+              </Button>
+            )}
             <input
               ref={fileInputRef}
               type="file"
