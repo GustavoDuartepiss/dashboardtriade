@@ -532,9 +532,10 @@ export default function Playbook() {
                             variant="ghost"
                             size="icon"
                             onClick={() => {
+                              pushUndo({ type: 'closingRule', item: rule });
                               deleteClosingRule(rule.id);
                               setClosingRules(getClosingRules());
-                              toast({ title: 'Regra removida' });
+                              toast.success('Regra removida');
                             }}
                           >
                             <Trash2 className="h-4 w-4 text-destructive" />
