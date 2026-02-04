@@ -191,7 +191,7 @@ export default function Playbook() {
     setObjections(getObjections());
     setShowObjectionForm(false);
     form.reset();
-    toast({ title: 'Objeção cadastrada!' });
+    toast.success('Objeção cadastrada!');
   };
 
   // Closing Rule handlers
