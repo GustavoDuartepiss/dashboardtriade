@@ -630,9 +630,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'plan', item: plan });
                                 deletePlan(plan.id);
                                 setPlans(getPlans());
-                                toast({ title: 'Plano removido' });
+                                toast.success('Plano removido');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
