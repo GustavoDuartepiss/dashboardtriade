@@ -778,6 +778,14 @@ export function deletePlan(id: string): void {
   saveToStorage(STORAGE_KEYS.plans, plans);
 }
 
+export function restorePlan(plan: Plan): void {
+  const plans = getPlans();
+  if (!plans.find(p => p.id === plan.id)) {
+    plans.push(plan);
+    saveToStorage(STORAGE_KEYS.plans, plans);
+  }
+}
+
 // ============================================
 // FOLLOW-UP SCENARIOS - CENÁRIOS DE FOLLOW-UP
 // ============================================
