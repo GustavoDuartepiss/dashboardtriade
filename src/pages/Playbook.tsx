@@ -817,8 +817,10 @@ export default function Playbook() {
                                 size="icon"
                                 className="h-6 w-6"
                                 onClick={() => {
+                                  pushUndo({ type: 'leadScoreRule', item: rule });
                                   deleteLeadScoreRule(rule.id);
                                   setLeadScoreRules(getLeadScoreRules());
+                                  toast.success('Regra removida');
                                 }}
                               >
                                 <Trash2 className="h-3 w-3" />
