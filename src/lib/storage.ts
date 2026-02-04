@@ -853,6 +853,14 @@ export function deleteLeadScoreRule(id: string): void {
   saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
 }
 
+export function restoreLeadScoreRule(rule: LeadScoreRule): void {
+  const rules = getLeadScoreRules();
+  if (!rules.find(r => r.id === rule.id)) {
+    rules.push(rule);
+    saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
+  }
+}
+
 export function getLeadScoreConfig(): LeadScoreConfig {
   return getObjectFromStorage<LeadScoreConfig>(STORAGE_KEYS.leadScoreConfig, {
     minimumToClose: 70,
