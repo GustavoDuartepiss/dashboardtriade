@@ -46,6 +46,7 @@ export default function Objecoes() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
+  const [undoStack, setUndoStack] = useState<Objection[]>([]);
   
   const [formData, setFormData] = useState({
     objection: '',
@@ -89,11 +90,22 @@ export default function Objecoes() {
     toast.success('Objeção cadastrada como unidade de decisão!');
   };
 
-  const handleDelete = (id: string) => {
-    deleteObjection(id);
-    setObjections(prev => prev.filter(o => o.id !== id));
+  const handleDelete = (objection: Objection) => {
+    setUndoStack(prev => [...prev.slice(-9), objection]);
+    deleteObjection(objection.id);
+    setObjections(prev => prev.filter(o => o.id !== objection.id));
     toast.success('Objeção removida');
   };
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+    
+    const lastDeleted = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+    restoreObjection(lastDeleted);
+    setObjections(getObjections());
+    toast.success('Objeção restaurada!');
+  }, [undoStack]);
 
   const addVariation = () => {
     setFormData(prev => ({
