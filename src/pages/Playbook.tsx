@@ -233,7 +233,7 @@ export default function Playbook() {
     setPlans(getPlans());
     setShowPlanForm(false);
     form.reset();
-    toast({ title: 'Plano cadastrado!' });
+    toast.success('Plano cadastrado!');
   };
 
   // Follow-up Scenario handlers
