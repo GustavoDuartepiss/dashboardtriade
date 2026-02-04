@@ -253,7 +253,7 @@ export default function Playbook() {
     setFollowUpScenarios(getFollowUpScenarios());
     setShowFollowUpForm(false);
     form.reset();
-    toast({ title: 'Cenário de follow-up cadastrado!' });
+    toast.success('Cenário de follow-up cadastrado!');
   };
 
   // Lead Score Rule handlers
