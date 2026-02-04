@@ -211,7 +211,7 @@ export default function Playbook() {
     setClosingRules(getClosingRules());
     setShowClosingRuleForm(false);
     form.reset();
-    toast({ title: 'Regra de fechamento cadastrada!' });
+    toast.success('Regra de fechamento cadastrada!');
   };
 
   // Plan handlers
