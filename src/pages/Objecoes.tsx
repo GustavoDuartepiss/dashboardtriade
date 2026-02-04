@@ -452,7 +452,7 @@ export default function Objecoes() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(objection.id)}
+                          onClick={() => handleDelete(objection)}
                           className="text-destructive hover:text-destructive/80"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
