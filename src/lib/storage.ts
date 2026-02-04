@@ -503,6 +503,14 @@ export function deleteClosingRule(id: string): void {
   saveToStorage(STORAGE_KEYS.closingRules, rules);
 }
 
+export function restoreClosingRule(rule: ClosingRule): void {
+  const rules = getClosingRules();
+  if (!rules.find(r => r.id === rule.id)) {
+    rules.push(rule);
+    saveToStorage(STORAGE_KEYS.closingRules, rules);
+  }
+}
+
 function getDefaultClosingRules(): ClosingRule[] {
   return [
     {
