@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Trash2, AlertTriangle, ChevronDown, ChevronUp, CheckCircle, XCircle, Target, Brain, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, AlertTriangle, ChevronDown, ChevronUp, CheckCircle, XCircle, Target, Brain, MessageSquare, Undo2 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { JarvisCard } from '@/components/ui/JarvisCard';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { getObjections, saveObjection, deleteObjection, Objection } from '@/lib/storage';
+import { getObjections, saveObjection, deleteObjection, restoreObjection, Objection } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 
 const SALES_STAGES = [
