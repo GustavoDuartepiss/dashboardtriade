@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Trash2, AlertTriangle, ChevronDown, ChevronUp, CheckCircle, XCircle, Target, Brain, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, AlertTriangle, ChevronDown, ChevronUp, CheckCircle, XCircle, Target, Brain, MessageSquare, Undo2 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { JarvisCard } from '@/components/ui/JarvisCard';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { getObjections, saveObjection, deleteObjection, Objection } from '@/lib/storage';
+import { getObjections, saveObjection, deleteObjection, restoreObjection, Objection } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 
 const SALES_STAGES = [
@@ -46,6 +46,7 @@ export default function Objecoes() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
+  const [undoStack, setUndoStack] = useState<Objection[]>([]);
   
   const [formData, setFormData] = useState({
     objection: '',
@@ -89,11 +90,22 @@ export default function Objecoes() {
     toast.success('Objeção cadastrada como unidade de decisão!');
   };
 
-  const handleDelete = (id: string) => {
-    deleteObjection(id);
-    setObjections(prev => prev.filter(o => o.id !== id));
+  const handleDelete = (objection: Objection) => {
+    setUndoStack(prev => [...prev.slice(-9), objection]);
+    deleteObjection(objection.id);
+    setObjections(prev => prev.filter(o => o.id !== objection.id));
     toast.success('Objeção removida');
   };
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+    
+    const lastDeleted = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+    restoreObjection(lastDeleted);
+    setObjections(getObjections());
+    toast.success('Objeção restaurada!');
+  }, [undoStack]);
 
   const addVariation = () => {
     setFormData(prev => ({
@@ -132,7 +144,7 @@ export default function Objecoes() {
     <MainLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold">
               <span className="gradient-text">Objeções</span>
@@ -141,157 +153,165 @@ export default function Objecoes() {
               Unidades de decisão estratégicas para contornar objeções
             </p>
           </div>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2 bg-primary hover:bg-primary/90">
-                <Plus className="h-4 w-4" />
-                Nova Objeção
+          <div className="flex gap-2">
+            {undoStack.length > 0 && (
+              <Button variant="outline" onClick={handleUndo} className="gap-2">
+                <Undo2 className="h-4 w-4" />
+                Desfazer ({undoStack.length})
               </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-card border-border max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="gradient-text">Nova Unidade de Decisão</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 mt-4">
-                {/* O que o lead fala */}
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-primary" />
-                    O que o lead fala *
-                  </Label>
-                  <Input
-                    value={formData.objection}
-                    onChange={(e) => setFormData(prev => ({ ...prev, objection: e.target.value }))}
-                    placeholder="Ex: Está muito caro, vou pensar..."
-                    className="bg-input border-border"
-                  />
-                </div>
+            )}
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-2 bg-primary hover:bg-primary/90">
+                  <Plus className="h-4 w-4" />
+                  Nova Objeção
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="gradient-text">Nova Unidade de Decisão</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 mt-4">
+                  {/* O que o lead fala */}
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4 text-primary" />
+                      O que o lead fala *
+                    </Label>
+                    <Input
+                      value={formData.objection}
+                      onChange={(e) => setFormData(prev => ({ ...prev, objection: e.target.value }))}
+                      placeholder="Ex: Está muito caro, vou pensar..."
+                      className="bg-input border-border"
+                    />
+                  </div>
 
-                {/* Etapa da venda */}
-                <div className="space-y-2">
-                  <Label>Etapa da Venda</Label>
-                  <Select
-                    value={formData.context}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, context: value }))}
-                  >
-                    <SelectTrigger className="bg-input border-border">
-                      <SelectValue placeholder="Em qual momento isso ocorre?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SALES_STAGES.map(stage => (
-                        <SelectItem key={stage} value={stage}>{stage}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                  {/* Etapa da venda */}
+                  <div className="space-y-2">
+                    <Label>Etapa da Venda</Label>
+                    <Select
+                      value={formData.context}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, context: value }))}
+                    >
+                      <SelectTrigger className="bg-input border-border">
+                        <SelectValue placeholder="Em qual momento isso ocorre?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SALES_STAGES.map(stage => (
+                          <SelectItem key={stage} value={stage}>{stage}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                {/* Intenção real */}
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <Brain className="h-4 w-4 text-warning" />
-                    Intenção Real do Lead
-                  </Label>
-                  <Textarea
-                    value={formData.realIntent}
-                    onChange={(e) => setFormData(prev => ({ ...prev, realIntent: e.target.value }))}
-                    placeholder="O que o lead realmente quer dizer com isso? Ex: Não viu valor suficiente, está comparando com concorrente..."
-                    className="min-h-[60px] bg-input border-border"
-                  />
-                </div>
+                  {/* Intenção real */}
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Brain className="h-4 w-4 text-warning" />
+                      Intenção Real do Lead
+                    </Label>
+                    <Textarea
+                      value={formData.realIntent}
+                      onChange={(e) => setFormData(prev => ({ ...prev, realIntent: e.target.value }))}
+                      placeholder="O que o lead realmente quer dizer com isso? Ex: Não viu valor suficiente, está comparando com concorrente..."
+                      className="min-h-[60px] bg-input border-border"
+                    />
+                  </div>
 
-                {/* Estratégia */}
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-success" />
-                    Estratégia de Resposta
-                  </Label>
-                  <Textarea
-                    value={formData.strategy}
-                    onChange={(e) => setFormData(prev => ({ ...prev, strategy: e.target.value }))}
-                    placeholder="Como abordar? Ex: Validar a preocupação, fazer pergunta de ancoragem, criar urgência..."
-                    className="min-h-[60px] bg-input border-border"
-                  />
-                </div>
+                  {/* Estratégia */}
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Target className="h-4 w-4 text-success" />
+                      Estratégia de Resposta
+                    </Label>
+                    <Textarea
+                      value={formData.strategy}
+                      onChange={(e) => setFormData(prev => ({ ...prev, strategy: e.target.value }))}
+                      placeholder="Como abordar? Ex: Validar a preocupação, fazer pergunta de ancoragem, criar urgência..."
+                      className="min-h-[60px] bg-input border-border"
+                    />
+                  </div>
 
-                {/* Discurso sugerido */}
-                <div className="space-y-2">
-                  <Label>Discurso Sugerido *</Label>
-                  <Textarea
-                    value={formData.bestResponse}
-                    onChange={(e) => setFormData(prev => ({ ...prev, bestResponse: e.target.value }))}
-                    placeholder="O script exato para usar..."
-                    className="min-h-[100px] bg-input border-border"
-                  />
-                </div>
+                  {/* Discurso sugerido */}
+                  <div className="space-y-2">
+                    <Label>Discurso Sugerido *</Label>
+                    <Textarea
+                      value={formData.bestResponse}
+                      onChange={(e) => setFormData(prev => ({ ...prev, bestResponse: e.target.value }))}
+                      placeholder="O script exato para usar..."
+                      className="min-h-[100px] bg-input border-border"
+                    />
+                  </div>
 
-                {/* Variações */}
-                <div className="space-y-2">
-                  <Label>Variações de Discurso</Label>
-                  {formData.variations.map((v, i) => (
-                    <div key={i} className="flex gap-2">
-                      <Input
-                        value={v}
-                        onChange={(e) => updateVariation(i, e.target.value)}
-                        placeholder={`Variação ${i + 1}`}
-                        className="bg-input border-border"
-                      />
-                      {formData.variations.length > 1 && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeVariation(i)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
+                  {/* Variações */}
+                  <div className="space-y-2">
+                    <Label>Variações de Discurso</Label>
+                    {formData.variations.map((v, i) => (
+                      <div key={i} className="flex gap-2">
+                        <Input
+                          value={v}
+                          onChange={(e) => updateVariation(i, e.target.value)}
+                          placeholder={`Variação ${i + 1}`}
+                          className="bg-input border-border"
+                        />
+                        {formData.variations.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeVariation(i)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                    <Button variant="outline" size="sm" onClick={addVariation}>
+                      + Adicionar Variação
+                    </Button>
+                  </div>
+
+                  {/* Usar desconto */}
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                    <div>
+                      <Label>Usar Desconto?</Label>
+                      <p className="text-xs text-muted-foreground">Essa objeção pode ser resolvida com desconto?</p>
                     </div>
-                  ))}
-                  <Button variant="outline" size="sm" onClick={addVariation}>
-                    + Adicionar Variação
+                    <Switch
+                      checked={formData.useDiscount}
+                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, useDiscount: checked }))}
+                    />
+                  </div>
+
+                  {/* Observações de Closer Sênior */}
+                  <div className="space-y-2">
+                    <Label className="text-warning">🎯 Observações de Closer Sênior</Label>
+                    <Textarea
+                      value={formData.closerNotes}
+                      onChange={(e) => setFormData(prev => ({ ...prev, closerNotes: e.target.value }))}
+                      placeholder="Dicas de quem já passou por isso: armadilhas, quando funciona melhor, sinais de que está funcionando..."
+                      className="min-h-[80px] bg-input border-border"
+                    />
+                  </div>
+
+                  {/* Notas gerais */}
+                  <div className="space-y-2">
+                    <Label>Notas Adicionais</Label>
+                    <Textarea
+                      value={formData.notes}
+                      onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+                      placeholder="Qualquer informação extra..."
+                      className="min-h-[60px] bg-input border-border"
+                    />
+                  </div>
+
+                  <Button onClick={handleSave} className="w-full bg-primary hover:bg-primary/90">
+                    Cadastrar Unidade de Decisão
                   </Button>
                 </div>
-
-                {/* Usar desconto */}
-                <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                  <div>
-                    <Label>Usar Desconto?</Label>
-                    <p className="text-xs text-muted-foreground">Essa objeção pode ser resolvida com desconto?</p>
-                  </div>
-                  <Switch
-                    checked={formData.useDiscount}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, useDiscount: checked }))}
-                  />
-                </div>
-
-                {/* Observações de Closer Sênior */}
-                <div className="space-y-2">
-                  <Label className="text-warning">🎯 Observações de Closer Sênior</Label>
-                  <Textarea
-                    value={formData.closerNotes}
-                    onChange={(e) => setFormData(prev => ({ ...prev, closerNotes: e.target.value }))}
-                    placeholder="Dicas de quem já passou por isso: armadilhas, quando funciona melhor, sinais de que está funcionando..."
-                    className="min-h-[80px] bg-input border-border"
-                  />
-                </div>
-
-                {/* Notas gerais */}
-                <div className="space-y-2">
-                  <Label>Notas Adicionais</Label>
-                  <Textarea
-                    value={formData.notes}
-                    onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                    placeholder="Qualquer informação extra..."
-                    className="min-h-[60px] bg-input border-border"
-                  />
-                </div>
-
-                <Button onClick={handleSave} className="w-full bg-primary hover:bg-primary/90">
-                  Cadastrar Unidade de Decisão
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Search and Filter */}
@@ -440,7 +460,7 @@ export default function Objecoes() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(objection.id)}
+                          onClick={() => handleDelete(objection)}
                           className="text-destructive hover:text-destructive/80"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />

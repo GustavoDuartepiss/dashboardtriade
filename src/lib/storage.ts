@@ -469,6 +469,15 @@ export function deleteObjection(id: string): void {
   saveToStorage(STORAGE_KEYS.objections, objections);
 }
 
+export function restoreObjection(objection: Objection): void {
+  const objections = getObjections();
+  // Verifica se já não existe para evitar duplicatas
+  if (!objections.find(o => o.id === objection.id)) {
+    objections.push(objection);
+    saveToStorage(STORAGE_KEYS.objections, objections);
+  }
+}
+
 // ============================================
 // CLOSING RULES - REGRAS DE FECHAMENTO
 // ============================================
@@ -492,6 +501,14 @@ export function saveClosingRule(rule: Omit<ClosingRule, 'id' | 'createdAt'>): Cl
 export function deleteClosingRule(id: string): void {
   const rules = getClosingRules().filter(r => r.id !== id);
   saveToStorage(STORAGE_KEYS.closingRules, rules);
+}
+
+export function restoreClosingRule(rule: ClosingRule): void {
+  const rules = getClosingRules();
+  if (!rules.find(r => r.id === rule.id)) {
+    rules.push(rule);
+    saveToStorage(STORAGE_KEYS.closingRules, rules);
+  }
 }
 
 function getDefaultClosingRules(): ClosingRule[] {
@@ -761,6 +778,14 @@ export function deletePlan(id: string): void {
   saveToStorage(STORAGE_KEYS.plans, plans);
 }
 
+export function restorePlan(plan: Plan): void {
+  const plans = getPlans();
+  if (!plans.find(p => p.id === plan.id)) {
+    plans.push(plan);
+    saveToStorage(STORAGE_KEYS.plans, plans);
+  }
+}
+
 // ============================================
 // FOLLOW-UP SCENARIOS - CENÁRIOS DE FOLLOW-UP
 // ============================================
@@ -795,6 +820,14 @@ export function deleteFollowUpScenario(id: string): void {
   saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
 }
 
+export function restoreFollowUpScenario(scenario: FollowUpScenario): void {
+  const scenarios = getFollowUpScenarios();
+  if (!scenarios.find(s => s.id === scenario.id)) {
+    scenarios.push(scenario);
+    saveToStorage(STORAGE_KEYS.followUpScenarios, scenarios);
+  }
+}
+
 // ============================================
 // LEAD SCORE - REGRAS E CONFIGURAÇÃO
 // ============================================
@@ -818,6 +851,14 @@ export function saveLeadScoreRule(rule: Omit<LeadScoreRule, 'id' | 'createdAt'>)
 export function deleteLeadScoreRule(id: string): void {
   const rules = getLeadScoreRules().filter(r => r.id !== id);
   saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
+}
+
+export function restoreLeadScoreRule(rule: LeadScoreRule): void {
+  const rules = getLeadScoreRules();
+  if (!rules.find(r => r.id === rule.id)) {
+    rules.push(rule);
+    saveToStorage(STORAGE_KEYS.leadScoreRules, rules);
+  }
 }
 
 export function getLeadScoreConfig(): LeadScoreConfig {

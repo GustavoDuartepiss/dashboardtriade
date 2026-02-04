@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { JarvisCard } from '@/components/ui/JarvisCard';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { 
   Brain, 
   Shield, 
@@ -20,8 +20,9 @@ import {
   Trash2,
   Download,
   Upload,
-  BookOpen,
-  Zap
+  Undo2,
+  Zap,
+  BookOpen
 } from 'lucide-react';
 import {
   Objection,
@@ -31,23 +32,26 @@ import {
   LeadScoreRule,
   LeadScoreConfig,
   OTEConfig,
-  OTEAccelerator,
-  OTEPenalty,
   getObjections,
   saveObjection,
   deleteObjection,
+  restoreObjection,
   getClosingRules,
   saveClosingRule,
   deleteClosingRule,
+  restoreClosingRule,
   getPlans,
   savePlan,
   deletePlan,
+  restorePlan,
   getFollowUpScenarios,
   saveFollowUpScenario,
   deleteFollowUpScenario,
+  restoreFollowUpScenario,
   getLeadScoreRules,
   saveLeadScoreRule,
   deleteLeadScoreRule,
+  restoreLeadScoreRule,
   getLeadScoreConfig,
   saveLeadScoreConfig,
   getOTEConfig,
@@ -58,8 +62,16 @@ import {
   PlaybookExport,
 } from '@/lib/storage';
 
+// Tipos para undo
+type UndoableItem = Objection | ClosingRule | Plan | FollowUpScenario | LeadScoreRule;
+type UndoType = 'objection' | 'closingRule' | 'plan' | 'followUpScenario' | 'leadScoreRule';
+
+interface UndoAction {
+  type: UndoType;
+  item: UndoableItem;
+}
+
 export default function Playbook() {
-  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Estado para cada seção
@@ -71,12 +83,52 @@ export default function Playbook() {
   const [leadScoreConfig, setLeadScoreConfigState] = useState<LeadScoreConfig>(getLeadScoreConfig());
   const [oteConfig, setOteConfigState] = useState<OTEConfig | null>(getOTEConfig());
 
+  // Undo stack
+  const [undoStack, setUndoStack] = useState<UndoAction[]>([]);
+
   // Forms state
   const [showObjectionForm, setShowObjectionForm] = useState(false);
   const [showClosingRuleForm, setShowClosingRuleForm] = useState(false);
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [showFollowUpForm, setShowFollowUpForm] = useState(false);
   const [showScoreRuleForm, setShowScoreRuleForm] = useState(false);
+
+  // Undo handler
+  const pushUndo = useCallback((action: UndoAction) => {
+    setUndoStack(prev => [...prev.slice(-9), action]);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+
+    const lastAction = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+
+    switch (lastAction.type) {
+      case 'objection':
+        restoreObjection(lastAction.item as Objection);
+        setObjections(getObjections());
+        break;
+      case 'closingRule':
+        restoreClosingRule(lastAction.item as ClosingRule);
+        setClosingRules(getClosingRules());
+        break;
+      case 'plan':
+        restorePlan(lastAction.item as Plan);
+        setPlans(getPlans());
+        break;
+      case 'followUpScenario':
+        restoreFollowUpScenario(lastAction.item as FollowUpScenario);
+        setFollowUpScenarios(getFollowUpScenarios());
+        break;
+      case 'leadScoreRule':
+        restoreLeadScoreRule(lastAction.item as LeadScoreRule);
+        setLeadScoreRules(getLeadScoreRules());
+        break;
+    }
+
+    toast.success('Ação desfeita!');
+  }, [undoStack]);
 
   // Handle Export
   const handleExport = () => {
@@ -88,7 +140,7 @@ export default function Playbook() {
     a.download = `playbook-jarvis-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast({ title: 'Playbook exportado!', description: 'Arquivo JSON baixado com sucesso.' });
+    toast.success('Playbook exportado!');
   };
 
   // Handle Import
@@ -109,9 +161,9 @@ export default function Playbook() {
         setLeadScoreRules(getLeadScoreRules());
         setLeadScoreConfigState(getLeadScoreConfig());
         setOteConfigState(getOTEConfig());
-        toast({ title: 'Playbook importado!', description: 'Todos os dados foram atualizados.' });
+        toast.success('Playbook importado!');
       } catch {
-        toast({ title: 'Erro na importação', description: 'Arquivo JSON inválido.', variant: 'destructive' });
+        toast.error('Arquivo JSON inválido');
       }
     };
     reader.readAsText(file);
@@ -139,7 +191,7 @@ export default function Playbook() {
     setObjections(getObjections());
     setShowObjectionForm(false);
     form.reset();
-    toast({ title: 'Objeção cadastrada!' });
+    toast.success('Objeção cadastrada!');
   };
 
   // Closing Rule handlers
@@ -159,7 +211,7 @@ export default function Playbook() {
     setClosingRules(getClosingRules());
     setShowClosingRuleForm(false);
     form.reset();
-    toast({ title: 'Regra de fechamento cadastrada!' });
+    toast.success('Regra de fechamento cadastrada!');
   };
 
   // Plan handlers
@@ -181,7 +233,7 @@ export default function Playbook() {
     setPlans(getPlans());
     setShowPlanForm(false);
     form.reset();
-    toast({ title: 'Plano cadastrado!' });
+    toast.success('Plano cadastrado!');
   };
 
   // Follow-up Scenario handlers
@@ -201,7 +253,7 @@ export default function Playbook() {
     setFollowUpScenarios(getFollowUpScenarios());
     setShowFollowUpForm(false);
     form.reset();
-    toast({ title: 'Cenário de follow-up cadastrado!' });
+    toast.success('Cenário de follow-up cadastrado!');
   };
 
   // Lead Score Rule handlers
@@ -219,13 +271,13 @@ export default function Playbook() {
     setLeadScoreRules(getLeadScoreRules());
     setShowScoreRuleForm(false);
     form.reset();
-    toast({ title: 'Regra de score cadastrada!' });
+    toast.success('Regra de score cadastrada!');
   };
 
   // Lead Score Config handlers
   const handleSaveScoreConfig = () => {
     saveLeadScoreConfig(leadScoreConfig);
-    toast({ title: 'Configuração de score salva!' });
+    toast.success('Configuração de score salva!');
   };
 
   // OTE Config handlers
@@ -250,7 +302,7 @@ export default function Playbook() {
     }
     
     setOteConfigState(getOTEConfig());
-    toast({ title: 'Configuração OTE salva!' });
+    toast.success('Configuração OTE salva!');
   };
 
   return (
@@ -267,7 +319,13 @@ export default function Playbook() {
               Playbook estratégico do Jarvis — base de conhecimento para decisões de vendas
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            {undoStack.length > 0 && (
+              <Button variant="outline" onClick={handleUndo} className="gap-2">
+                <Undo2 className="h-4 w-4" />
+                Desfazer ({undoStack.length})
+              </Button>
+            )}
             <input
               ref={fileInputRef}
               type="file"
@@ -386,9 +444,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'objection', item: obj });
                                 deleteObjection(obj.id);
                                 setObjections(getObjections());
-                                toast({ title: 'Objeção removida' });
+                                toast.success('Objeção removida');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
@@ -479,9 +538,10 @@ export default function Playbook() {
                             variant="ghost"
                             size="icon"
                             onClick={() => {
+                              pushUndo({ type: 'closingRule', item: rule });
                               deleteClosingRule(rule.id);
                               setClosingRules(getClosingRules());
-                              toast({ title: 'Regra removida' });
+                              toast.success('Regra removida');
                             }}
                           >
                             <Trash2 className="h-4 w-4 text-destructive" />
@@ -576,9 +636,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'plan', item: plan });
                                 deletePlan(plan.id);
                                 setPlans(getPlans());
-                                toast({ title: 'Plano removido' });
+                                toast.success('Plano removido');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
@@ -675,9 +736,10 @@ export default function Playbook() {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
+                                pushUndo({ type: 'followUpScenario', item: scenario });
                                 deleteFollowUpScenario(scenario.id);
                                 setFollowUpScenarios(getFollowUpScenarios());
-                                toast({ title: 'Cenário removido' });
+                                toast.success('Cenário removido');
                               }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
@@ -755,8 +817,10 @@ export default function Playbook() {
                                 size="icon"
                                 className="h-6 w-6"
                                 onClick={() => {
+                                  pushUndo({ type: 'leadScoreRule', item: rule });
                                   deleteLeadScoreRule(rule.id);
                                   setLeadScoreRules(getLeadScoreRules());
+                                  toast.success('Regra removida');
                                 }}
                               >
                                 <Trash2 className="h-3 w-3" />
