@@ -82,11 +82,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  const dismissAlert = (id: string) => {
-    setAlerts(prev => prev.filter(a => a.id !== id));
-  };
-
-  const progressMeta1 = stats.meta1 > 0 ? (stats.achieved / stats.meta1) * 100 : 0;
+  const progressMeta3 = stats.meta3 > 0 ? (stats.achieved / stats.meta3) * 100 : 0;
 
   return (
     <MainLayout>
