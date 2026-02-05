@@ -36,7 +36,6 @@ export default function Dashboard() {
   useEffect(() => {
     const goal = getCurrentMonthGoal();
     const workingDays = calculateWorkingDaysRemaining();
-    const followUps = getFollowUps();
     const templates = getTemplates();
 
     if (goal) {
@@ -45,9 +44,8 @@ export default function Dashboard() {
         meta2: goal.meta2,
         meta3: goal.meta3,
         achieved: goal.achieved,
-        dailyGoal: calculateDailyGoal(goal.meta1, goal.achieved),
+        dailyGoal: calculateDailyGoal(goal.meta3, goal.achieved),
         workingDays,
-        followUpsCount: followUps.length,
         templatesCount: templates.length,
       });
 
