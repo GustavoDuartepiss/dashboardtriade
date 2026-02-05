@@ -49,6 +49,7 @@ export default function Metas() {
 
   const handleSave = () => {
     const now = new Date();
+    const customDays = formData.customWorkingDays ? parseInt(formData.customWorkingDays) : undefined;
     const newGoal = {
       month: now.getMonth(),
       year: now.getFullYear(),
@@ -56,6 +57,7 @@ export default function Metas() {
       meta2: parseFloat(formData.meta2) || 0,
       meta3: parseFloat(formData.meta3) || 0,
       achieved: parseFloat(formData.achieved) || 0,
+      customWorkingDays: customDays && customDays > 0 ? customDays : undefined,
     };
 
     if (goal) {
