@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { 
   Target, 
-  MessageSquare, 
   TrendingUp, 
   Calendar,
   Bot,
