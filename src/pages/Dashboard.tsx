@@ -70,7 +70,6 @@ export default function Dashboard() {
         achieved: 0,
         dailyGoal: 0,
         workingDays,
-        followUpsCount: followUps.length,
         templatesCount: templates.length,
       });
 
