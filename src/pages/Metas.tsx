@@ -165,7 +165,7 @@ export default function Metas() {
         {/* Goals Form / Display */}
         {isEditing ? (
           <JarvisCard title="Configurar Metas" icon={<Calculator className="h-5 w-5" />}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="space-y-2">
                 <Label>Meta 1 (R$)</Label>
                 <Input
@@ -205,6 +205,17 @@ export default function Metas() {
                   placeholder="5000"
                   className="bg-input border-border font-mono"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label>Dias Úteis</Label>
+                <Input
+                  type="number"
+                  value={formData.customWorkingDays}
+                  onChange={(e) => setFormData(prev => ({ ...prev, customWorkingDays: e.target.value }))}
+                  placeholder={`${calculateWorkingDaysRemaining(false)} (auto)`}
+                  className="bg-input border-border font-mono"
+                />
+                <p className="text-xs text-muted-foreground">Deixe vazio para cálculo automático</p>
               </div>
             </div>
           </JarvisCard>
