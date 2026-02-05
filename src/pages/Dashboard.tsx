@@ -31,7 +31,6 @@ export default function Dashboard() {
     achieved: 0,
     dailyGoal: 0,
     workingDays: 0,
-    followUpsCount: 0,
     templatesCount: 0,
   });
 
