@@ -219,14 +219,6 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="w-full justify-start gap-3 jarvis-border"
-                onClick={() => navigate('/objecoes')}
-              >
-                <MessageSquare className="h-4 w-4 text-primary" />
-                Ver Objeções
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-3 jarvis-border"
                 onClick={() => navigate('/descontos')}
               >
                 <Zap className="h-4 w-4 text-primary" />
