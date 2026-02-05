@@ -52,21 +52,12 @@ export default function Dashboard() {
       // Generate smart alerts
       const newAlerts = [];
       
-      if (goal.achieved < goal.meta1 * 0.5 && workingDays < 10) {
+      if (goal.achieved < goal.meta3 * 0.5 && workingDays < 10) {
         newAlerts.push({
           id: '1',
           type: 'warning' as const,
           title: 'Meta em risco!',
-          message: `Você precisa fechar R$ ${calculateDailyGoal(goal.meta1, goal.achieved).toLocaleString('pt-BR')} por dia para bater a Meta 1.`,
-        });
-      }
-
-      if (followUps.length === 0) {
-        newAlerts.push({
-          id: '2',
-          type: 'info' as const,
-          title: 'Configure seus follow-ups',
-          message: 'Cadastre sua cadência de follow-ups para nunca esquecer um lead.',
+          message: `Você precisa fechar R$ ${calculateDailyGoal(goal.meta3, goal.achieved).toLocaleString('pt-BR')} por dia para bater a Meta 3.`,
         });
       }
 
