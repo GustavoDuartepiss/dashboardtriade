@@ -26,6 +26,7 @@ export default function Metas() {
     meta2: '',
     meta3: '',
     achieved: '',
+    customWorkingDays: '',
   });
 
   useEffect(() => {
