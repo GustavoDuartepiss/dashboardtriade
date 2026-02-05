@@ -42,6 +42,7 @@ export default function Metas() {
         meta2: currentGoal.meta2.toString(),
         meta3: currentGoal.meta3.toString(),
         achieved: currentGoal.achieved.toString(),
+        customWorkingDays: currentGoal.customWorkingDays?.toString() || '',
       });
     }
   }, []);
