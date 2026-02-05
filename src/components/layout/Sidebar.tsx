@@ -15,12 +15,9 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/playbook', label: 'Playbook', icon: Brain },
-  { path: '/follow-ups', label: 'Follow-ups', icon: MessageSquare },
   { path: '/templates', label: 'Templates', icon: FileText },
   { path: '/descontos', label: 'Descontos', icon: Percent },
   { path: '/metas', label: 'Metas', icon: Target },
-  { path: '/objecoes', label: 'Objeções', icon: AlertTriangle },
   { path: '/jarvis', label: 'Jarvis IA', icon: Bot },
   { path: '/configuracoes', label: 'Configurações', icon: Settings },
 ];

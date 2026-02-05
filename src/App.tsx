@@ -21,14 +21,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/follow-ups" element={<FollowUps />} />
           <Route path="/templates" element={<Templates />} />
           <Route path="/descontos" element={<Descontos />} />
           <Route path="/metas" element={<Metas />} />
-          <Route path="/objecoes" element={<Objecoes />} />
           <Route path="/jarvis" element={<Jarvis />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
-          <Route path="/playbook" element={<Playbook />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
