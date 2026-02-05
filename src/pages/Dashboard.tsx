@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { 
   Target, 
-  MessageSquare, 
   TrendingUp, 
   Calendar,
   Bot,
@@ -16,7 +15,6 @@ import {
   getCurrentMonthGoal, 
   calculateWorkingDaysRemaining, 
   calculateDailyGoal,
-  getFollowUps,
   getTemplates
 } from '@/lib/storage';
 import { useNavigate } from 'react-router-dom';
@@ -31,14 +29,12 @@ export default function Dashboard() {
     achieved: 0,
     dailyGoal: 0,
     workingDays: 0,
-    followUpsCount: 0,
     templatesCount: 0,
   });
 
   useEffect(() => {
     const goal = getCurrentMonthGoal();
     const workingDays = calculateWorkingDaysRemaining();
-    const followUps = getFollowUps();
     const templates = getTemplates();
 
     if (goal) {
@@ -47,30 +43,20 @@ export default function Dashboard() {
         meta2: goal.meta2,
         meta3: goal.meta3,
         achieved: goal.achieved,
-        dailyGoal: calculateDailyGoal(goal.meta1, goal.achieved),
+        dailyGoal: calculateDailyGoal(goal.meta3, goal.achieved),
         workingDays,
-        followUpsCount: followUps.length,
         templatesCount: templates.length,
       });
 
       // Generate smart alerts
       const newAlerts = [];
       
-      if (goal.achieved < goal.meta1 * 0.5 && workingDays < 10) {
+      if (goal.achieved < goal.meta3 * 0.5 && workingDays < 10) {
         newAlerts.push({
           id: '1',
           type: 'warning' as const,
           title: 'Meta em risco!',
-          message: `Você precisa fechar R$ ${calculateDailyGoal(goal.meta1, goal.achieved).toLocaleString('pt-BR')} por dia para bater a Meta 1.`,
-        });
-      }
-
-      if (followUps.length === 0) {
-        newAlerts.push({
-          id: '2',
-          type: 'info' as const,
-          title: 'Configure seus follow-ups',
-          message: 'Cadastre sua cadência de follow-ups para nunca esquecer um lead.',
+          message: `Você precisa fechar R$ ${calculateDailyGoal(goal.meta3, goal.achieved).toLocaleString('pt-BR')} por dia para bater a Meta 3.`,
         });
       }
 
@@ -83,7 +69,6 @@ export default function Dashboard() {
         achieved: 0,
         dailyGoal: 0,
         workingDays,
-        followUpsCount: followUps.length,
         templatesCount: templates.length,
       });
 
@@ -100,7 +85,7 @@ export default function Dashboard() {
     setAlerts(prev => prev.filter(a => a.id !== id));
   };
 
-  const progressMeta1 = stats.meta1 > 0 ? (stats.achieved / stats.meta1) * 100 : 0;
+  const progressMeta3 = stats.meta3 > 0 ? (stats.achieved / stats.meta3) * 100 : 0;
 
   return (
     <MainLayout>
@@ -140,7 +125,7 @@ export default function Dashboard() {
         )}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
             title="Meta Diária Necessária"
             value={`R$ ${stats.dailyGoal.toLocaleString('pt-BR')}`}
@@ -151,15 +136,9 @@ export default function Dashboard() {
           <StatCard
             title="Já Fechado"
             value={`R$ ${stats.achieved.toLocaleString('pt-BR')}`}
-            subtitle={`${progressMeta1.toFixed(0)}% da Meta 1`}
+            subtitle={`${progressMeta3.toFixed(0)}% da Meta 3`}
             icon={<TrendingUp className="h-5 w-5" />}
-            trend={progressMeta1 >= 100 ? 'up' : progressMeta1 >= 50 ? 'neutral' : 'down'}
-          />
-          <StatCard
-            title="Follow-ups Cadastrados"
-            value={stats.followUpsCount}
-            subtitle="Cadências ativas"
-            icon={<MessageSquare className="h-5 w-5" />}
+            trend={progressMeta3 >= 100 ? 'up' : progressMeta3 >= 50 ? 'neutral' : 'down'}
           />
           <StatCard
             title="Templates Prontos"
