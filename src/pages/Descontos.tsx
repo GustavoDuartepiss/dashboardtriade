@@ -253,8 +253,8 @@ export default function Descontos() {
                     </Button>
                   </div>
 
-                  <div className="bg-secondary/50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-mono font-bold text-primary">{discount.code}</p>
+                  <div className="bg-secondary/50 rounded-lg p-3 text-center overflow-hidden">
+                    <p className="text-2xl font-mono font-bold text-primary truncate">{discount.code}</p>
                   </div>
 
                   {discount.description && (
