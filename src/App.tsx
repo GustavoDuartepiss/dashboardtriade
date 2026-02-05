@@ -4,14 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import FollowUps from "./pages/FollowUps";
 import Templates from "./pages/Templates";
 import Descontos from "./pages/Descontos";
 import Metas from "./pages/Metas";
-import Objecoes from "./pages/Objecoes";
 import Jarvis from "./pages/Jarvis";
 import Configuracoes from "./pages/Configuracoes";
-import Playbook from "./pages/Playbook";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
