@@ -47,6 +47,7 @@ export interface Goal {
   meta2: number;
   meta3: number;
   achieved: number;
+  customWorkingDays?: number; // Dias úteis customizados (sobrescreve cálculo automático)
   createdAt: string;
 }
 
@@ -712,7 +713,15 @@ export function getJarvisModes(): JarvisModeConfig[] {
 // GOAL CALCULATIONS
 // ============================================
 
-export function calculateWorkingDaysRemaining(): number {
+export function calculateWorkingDaysRemaining(useCustom: boolean = true): number {
+  // Se useCustom, verifica se há dias customizados definidos
+  if (useCustom) {
+    const goal = getCurrentMonthGoal();
+    if (goal?.customWorkingDays !== undefined && goal.customWorkingDays > 0) {
+      return goal.customWorkingDays;
+    }
+  }
+  
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();

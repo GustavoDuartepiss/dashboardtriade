@@ -26,6 +26,7 @@ export default function Metas() {
     meta2: '',
     meta3: '',
     achieved: '',
+    customWorkingDays: '',
   });
 
   useEffect(() => {
@@ -41,12 +42,14 @@ export default function Metas() {
         meta2: currentGoal.meta2.toString(),
         meta3: currentGoal.meta3.toString(),
         achieved: currentGoal.achieved.toString(),
+        customWorkingDays: currentGoal.customWorkingDays?.toString() || '',
       });
     }
   }, []);
 
   const handleSave = () => {
     const now = new Date();
+    const customDays = formData.customWorkingDays ? parseInt(formData.customWorkingDays) : undefined;
     const newGoal = {
       month: now.getMonth(),
       year: now.getFullYear(),
@@ -54,6 +57,7 @@ export default function Metas() {
       meta2: parseFloat(formData.meta2) || 0,
       meta3: parseFloat(formData.meta3) || 0,
       achieved: parseFloat(formData.achieved) || 0,
+      customWorkingDays: customDays && customDays > 0 ? customDays : undefined,
     };
 
     if (goal) {
@@ -161,7 +165,7 @@ export default function Metas() {
         {/* Goals Form / Display */}
         {isEditing ? (
           <JarvisCard title="Configurar Metas" icon={<Calculator className="h-5 w-5" />}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="space-y-2">
                 <Label>Meta 1 (R$)</Label>
                 <Input
@@ -201,6 +205,17 @@ export default function Metas() {
                   placeholder="5000"
                   className="bg-input border-border font-mono"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label>Dias Úteis</Label>
+                <Input
+                  type="number"
+                  value={formData.customWorkingDays}
+                  onChange={(e) => setFormData(prev => ({ ...prev, customWorkingDays: e.target.value }))}
+                  placeholder={`${calculateWorkingDaysRemaining(false)} (auto)`}
+                  className="bg-input border-border font-mono"
+                />
+                <p className="text-xs text-muted-foreground">Deixe vazio para cálculo automático</p>
               </div>
             </div>
           </JarvisCard>
