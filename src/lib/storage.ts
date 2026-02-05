@@ -47,6 +47,7 @@ export interface Goal {
   meta2: number;
   meta3: number;
   achieved: number;
+  customWorkingDays?: number; // Dias úteis customizados (sobrescreve cálculo automático)
   createdAt: string;
 }
 
