@@ -126,7 +126,7 @@ export default function Dashboard() {
         )}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
             title="Meta Diária Necessária"
             value={`R$ ${stats.dailyGoal.toLocaleString('pt-BR')}`}
@@ -137,15 +137,9 @@ export default function Dashboard() {
           <StatCard
             title="Já Fechado"
             value={`R$ ${stats.achieved.toLocaleString('pt-BR')}`}
-            subtitle={`${progressMeta1.toFixed(0)}% da Meta 1`}
+            subtitle={`${progressMeta3.toFixed(0)}% da Meta 3`}
             icon={<TrendingUp className="h-5 w-5" />}
-            trend={progressMeta1 >= 100 ? 'up' : progressMeta1 >= 50 ? 'neutral' : 'down'}
-          />
-          <StatCard
-            title="Follow-ups Cadastrados"
-            value={stats.followUpsCount}
-            subtitle="Cadências ativas"
-            icon={<MessageSquare className="h-5 w-5" />}
+            trend={progressMeta3 >= 100 ? 'up' : progressMeta3 >= 50 ? 'neutral' : 'down'}
           />
           <StatCard
             title="Templates Prontos"
