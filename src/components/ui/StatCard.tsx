@@ -21,17 +21,18 @@ export function StatCard({
   return (
     <div
       className={cn(
-        'jarvis-glass rounded-xl p-5 animate-fade-in jarvis-border',
+        'rounded-xl p-5 animate-fade-in card-hover',
+        'bg-card border border-border',
         className
       )}
     >
       <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground mb-1">{title}</p>
-          <p className="text-3xl font-bold font-mono gradient-text">{value}</p>
+        <div className="space-y-1">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{title}</p>
+          <p className="text-2xl font-bold font-mono text-foreground">{value}</p>
           {subtitle && (
             <p className={cn(
-              'text-sm mt-1',
+              'text-xs',
               trend === 'up' && 'text-success',
               trend === 'down' && 'text-destructive',
               trend === 'neutral' && 'text-muted-foreground'
@@ -41,7 +42,7 @@ export function StatCard({
           )}
         </div>
         {icon && (
-          <div className="p-3 rounded-lg bg-primary/10 text-primary">
+          <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
             {icon}
           </div>
         )}

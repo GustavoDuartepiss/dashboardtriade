@@ -8,7 +8,6 @@ import {
   Bot,
   Menu,
   X,
-  Zap,
   Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -38,20 +37,33 @@ export function Sidebar() {
       <div className="flex h-16 items-center justify-between px-4 border-b border-sidebar-border">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <Zap className="h-8 w-8 text-primary" />
-              <div className="absolute inset-0 animate-glow-pulse rounded-full" />
-            </div>
-            <span className="font-bold text-lg gradient-text">JARVIS</span>
+            <span className="triade-symbol text-primary text-xl font-bold select-none">✦</span>
+            <span className="font-display font-bold text-lg tracking-tight text-foreground">TRIADE</span>
           </div>
+        )}
+        {isCollapsed && (
+          <span className="triade-symbol text-primary text-lg font-bold select-none mx-auto">✦</span>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-sidebar-accent transition-colors text-sidebar-foreground"
+          className={cn(
+            "p-2 rounded-lg hover:bg-sidebar-accent transition-colors text-sidebar-foreground",
+            isCollapsed && "hidden"
+          )}
         >
-          {isCollapsed ? <Menu className="h-5 w-5" /> : <X className="h-5 w-5" />}
+          <X className="h-5 w-5" />
         </button>
       </div>
+
+      {/* Expand button when collapsed */}
+      {isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="w-full flex justify-center p-3 hover:bg-sidebar-accent transition-colors text-sidebar-foreground"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      )}
 
       {/* Navigation */}
       <nav className="mt-4 px-2 space-y-1">
@@ -64,9 +76,9 @@ export function Sidebar() {
               key={item.path}
               to={item.path}
               className={cn(
-                'flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200',
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                 'hover:bg-sidebar-accent group',
-                isActive && 'bg-sidebar-accent jarvis-border',
+                isActive && 'bg-sidebar-accent border border-primary/20',
                 isCollapsed && 'justify-center'
               )}
             >
@@ -79,15 +91,15 @@ export function Sidebar() {
               {!isCollapsed && (
                 <span
                   className={cn(
-                    'font-medium transition-colors',
-                    isActive ? 'text-primary' : 'text-sidebar-foreground group-hover:text-primary'
+                    'text-sm font-medium transition-colors',
+                    isActive ? 'text-foreground' : 'text-sidebar-foreground group-hover:text-foreground'
                   )}
                 >
                   {item.label}
                 </span>
               )}
               {isActive && !isCollapsed && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-glow-pulse" />
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
               )}
             </NavLink>
           );
@@ -97,9 +109,9 @@ export function Sidebar() {
       {/* Footer */}
       {!isCollapsed && (
         <div className="absolute bottom-4 left-4 right-4">
-          <div className="jarvis-glass rounded-lg p-3">
-            <p className="text-xs text-muted-foreground text-center">
-              Seu cérebro de vendas
+          <div className="rounded-lg border border-border p-3 bg-secondary/30">
+            <p className="text-xs text-muted-foreground text-center font-mono">
+              Central de Comando
             </p>
           </div>
         </div>

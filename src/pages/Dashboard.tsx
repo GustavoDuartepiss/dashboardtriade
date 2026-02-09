@@ -4,7 +4,9 @@ import {
   TrendingUp, 
   Calendar,
   Bot,
-  Zap
+  Zap,
+  ArrowUpRight,
+  Activity
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { StatCard } from '@/components/ui/StatCard';
@@ -48,9 +50,7 @@ export default function Dashboard() {
         templatesCount: templates.length,
       });
 
-      // Generate smart alerts
       const newAlerts = [];
-      
       if (goal.achieved < goal.meta3 * 0.5 && workingDays < 10) {
         newAlerts.push({
           id: '1',
@@ -59,19 +59,12 @@ export default function Dashboard() {
           message: `Você precisa fechar R$ ${calculateDailyGoal(goal.meta3, goal.achieved).toLocaleString('pt-BR')} por dia para bater a Meta 3.`,
         });
       }
-
       setAlerts(newAlerts);
     } else {
       setStats({
-        meta1: 0,
-        meta2: 0,
-        meta3: 0,
-        achieved: 0,
-        dailyGoal: 0,
-        workingDays,
-        templatesCount: templates.length,
+        meta1: 0, meta2: 0, meta3: 0, achieved: 0,
+        dailyGoal: 0, workingDays, templatesCount: templates.length,
       });
-
       setAlerts([{
         id: '0',
         type: 'info' as const,
@@ -86,27 +79,39 @@ export default function Dashboard() {
   };
 
   const progressMeta3 = stats.meta3 > 0 ? (stats.achieved / stats.meta3) * 100 : 0;
+  const projection = stats.workingDays > 0 && stats.achieved > 0
+    ? Math.round(stats.achieved / (new Date().getDate()) * 30)
+    : 0;
 
   return (
     <MainLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">
-              <span className="gradient-text">Dashboard</span>
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Seu centro de comando de vendas
-            </p>
+      <div className="space-y-8">
+        {/* Hero Header */}
+        <div className="relative overflow-hidden rounded-xl border border-border bg-card p-8">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          
+          <div className="relative flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="triade-symbol text-primary text-sm">✦</span>
+                <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Painel de Comando</span>
+              </div>
+              <h1 className="text-4xl font-display font-bold tracking-tight text-foreground mb-2">
+                Central de <span className="gradient-text">Operações</span>
+              </h1>
+              <p className="text-muted-foreground max-w-md">
+                Monitore suas metas, gerencie estratégias e feche negócios com precisão.
+              </p>
+            </div>
+            <Button 
+              onClick={() => navigate('/jarvis')}
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+            >
+              <Bot className="h-4 w-4" />
+              Falar com Jarvis
+            </Button>
           </div>
-          <Button 
-            onClick={() => navigate('/jarvis')}
-            className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-          >
-            <Bot className="h-4 w-4" />
-            Falar com Jarvis
-          </Button>
         </div>
 
         {/* Alerts */}
@@ -124,10 +129,10 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Key Metrics - 4 cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            title="Meta Diária Necessária"
+            title="Meta Diária"
             value={`R$ ${stats.dailyGoal.toLocaleString('pt-BR')}`}
             subtitle={`${stats.workingDays} dias úteis restantes`}
             icon={<Target className="h-5 w-5" />}
@@ -141,10 +146,18 @@ export default function Dashboard() {
             trend={progressMeta3 >= 100 ? 'up' : progressMeta3 >= 50 ? 'neutral' : 'down'}
           />
           <StatCard
-            title="Templates Prontos"
-            value={stats.templatesCount}
-            subtitle="Mensagens copiáveis"
-            icon={<Calendar className="h-5 w-5" />}
+            title="Projeção do Mês"
+            value={`R$ ${projection.toLocaleString('pt-BR')}`}
+            subtitle={projection >= stats.meta3 ? 'Acima da meta' : 'Abaixo da meta'}
+            icon={<Activity className="h-5 w-5" />}
+            trend={projection >= stats.meta3 ? 'up' : 'down'}
+          />
+          <StatCard
+            title="Performance"
+            value={`${progressMeta3.toFixed(1)}%`}
+            subtitle={`Meta 3: R$ ${stats.meta3.toLocaleString('pt-BR')}`}
+            icon={<ArrowUpRight className="h-5 w-5" />}
+            trend={progressMeta3 >= 80 ? 'up' : progressMeta3 >= 50 ? 'neutral' : 'down'}
           />
         </div>
 
@@ -160,7 +173,7 @@ export default function Dashboard() {
               {[
                 { label: 'Meta 1', value: stats.meta1, color: 'bg-primary' },
                 { label: 'Meta 2', value: stats.meta2, color: 'bg-success' },
-                { label: 'Meta 3', value: stats.meta3, color: 'bg-warning' },
+                { label: 'Meta 3', value: stats.meta3, color: 'bg-primary' },
               ].map((meta) => {
                 const progress = meta.value > 0 ? Math.min((stats.achieved / meta.value) * 100, 100) : 0;
                 const remaining = Math.max(meta.value - stats.achieved, 0);
@@ -168,19 +181,19 @@ export default function Dashboard() {
                 return (
                   <div key={meta.label} className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{meta.label}</span>
-                      <span className="font-mono text-muted-foreground">
+                      <span className="font-medium text-foreground">{meta.label}</span>
+                      <span className="font-mono text-muted-foreground text-xs">
                         R$ {stats.achieved.toLocaleString('pt-BR')} / R$ {meta.value.toLocaleString('pt-BR')}
                       </span>
                     </div>
-                    <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
                       <div 
-                        className={`h-full ${meta.color} transition-all duration-500`}
+                        className={`h-full ${meta.color} rounded-full transition-all duration-700 ${progress > 0 ? 'progress-glow' : ''}`}
                         style={{ width: `${progress}%` }}
                       />
                     </div>
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{progress.toFixed(1)}% concluído</span>
+                      <span>{progress.toFixed(1)}%</span>
                       <span>Falta: R$ {remaining.toLocaleString('pt-BR')}</span>
                     </div>
                   </div>
@@ -194,10 +207,10 @@ export default function Dashboard() {
             title="Ações Rápidas"
             icon={<Zap className="h-5 w-5" />}
           >
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full justify-start gap-3 jarvis-border"
+                className="w-full justify-start gap-3 border-border hover:border-primary/30 hover:bg-primary/5 transition-all"
                 onClick={() => navigate('/descontos')}
               >
                 <Zap className="h-4 w-4 text-primary" />
@@ -205,7 +218,7 @@ export default function Dashboard() {
               </Button>
               <Button 
                 variant="outline" 
-                className="w-full justify-start gap-3 jarvis-border"
+                className="w-full justify-start gap-3 border-border hover:border-primary/30 hover:bg-primary/5 transition-all"
                 onClick={() => navigate('/templates')}
               >
                 <Calendar className="h-4 w-4 text-primary" />
@@ -213,7 +226,7 @@ export default function Dashboard() {
               </Button>
               <Button 
                 variant="outline" 
-                className="w-full justify-start gap-3 jarvis-border"
+                className="w-full justify-start gap-3 border-border hover:border-primary/30 hover:bg-primary/5 transition-all"
                 onClick={() => navigate('/metas')}
               >
                 <Target className="h-4 w-4 text-primary" />
