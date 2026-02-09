@@ -23,7 +23,7 @@ export function JarvisCard({
   return (
     <div
       className={cn(
-        'jarvis-glass rounded-xl p-5 animate-fade-in',
+        'rounded-xl p-5 animate-fade-in bg-card border border-border',
         glow && 'jarvis-glow',
         className
       )}
@@ -38,7 +38,7 @@ export function JarvisCard({
             )}
             <div>
               {title && (
-                <h3 className="font-semibold text-lg">{title}</h3>
+                <h3 className="font-semibold text-base text-foreground">{title}</h3>
               )}
               {description && (
                 <p className="text-sm text-muted-foreground">{description}</p>
