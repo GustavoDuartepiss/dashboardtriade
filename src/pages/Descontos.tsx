@@ -47,6 +47,10 @@ export default function Descontos() {
     type: 'parceria' as Discount['type'],
     code: '',
     description: '',
+    maxPercentage: 0,
+    acceptableSituations: [] as string[],
+    requiredCounterpart: '',
+    prohibitedSituations: [] as string[],
   });
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function Descontos() {
 
     const saved = saveDiscount(formData);
     setDiscounts(prev => [...prev, saved]);
-    setFormData({ period: 'mensal', type: 'parceria', code: '', description: '' });
+    setFormData({ period: 'mensal', type: 'parceria', code: '', description: '', maxPercentage: 0, acceptableSituations: [], requiredCounterpart: '', prohibitedSituations: [] });
     setIsOpen(false);
     toast.success('Desconto salvo!');
   };
@@ -249,8 +253,8 @@ export default function Descontos() {
                     </Button>
                   </div>
 
-                  <div className="bg-secondary/50 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-mono font-bold text-primary">{discount.code}</p>
+                  <div className="bg-secondary/50 rounded-lg p-3 text-center overflow-hidden">
+                    <p className="text-2xl font-mono font-bold text-primary truncate">{discount.code}</p>
                   </div>
 
                   {discount.description && (
