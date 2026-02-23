@@ -6,7 +6,9 @@ import {
   Bot,
   Zap,
   ArrowUpRight,
-  Activity
+  Activity,
+  Tag,
+  FileText
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { StatCard } from '@/components/ui/StatCard';
@@ -17,7 +19,8 @@ import {
   getCurrentMonthGoal, 
   calculateWorkingDaysRemaining, 
   calculateDailyGoal,
-  getTemplates
+  getTemplates,
+  getDiscounts
 } from '@/lib/storage';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,12 +35,14 @@ export default function Dashboard() {
     dailyGoal: 0,
     workingDays: 0,
     templatesCount: 0,
+    discountsCount: 0,
   });
 
   useEffect(() => {
     const goal = getCurrentMonthGoal();
     const workingDays = calculateWorkingDaysRemaining();
     const templates = getTemplates();
+    const discountsList = getDiscounts();
 
     if (goal) {
       setStats({
@@ -48,6 +53,7 @@ export default function Dashboard() {
         dailyGoal: calculateDailyGoal(goal.meta3, goal.achieved),
         workingDays,
         templatesCount: templates.length,
+        discountsCount: discountsList.length,
       });
 
       const newAlerts = [];
@@ -63,7 +69,7 @@ export default function Dashboard() {
     } else {
       setStats({
         meta1: 0, meta2: 0, meta3: 0, achieved: 0,
-        dailyGoal: 0, workingDays, templatesCount: templates.length,
+        dailyGoal: 0, workingDays, templatesCount: templates.length, discountsCount: discountsList.length,
       });
       setAlerts([{
         id: '0',
@@ -103,6 +109,19 @@ export default function Dashboard() {
               <p className="text-muted-foreground max-w-md">
                 Monitore suas metas, gerencie estratégias e feche negócios com precisão.
               </p>
+              {/* Counters */}
+              <div className="flex gap-4 mt-4">
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-sm font-semibold text-foreground">{stats.templatesCount}</span>
+                  <span className="text-xs text-muted-foreground">Templates</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2">
+                  <Tag className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-sm font-semibold text-foreground">{stats.discountsCount}</span>
+                  <span className="text-xs text-muted-foreground">Cupons</span>
+                </div>
+              </div>
             </div>
             <Button 
               onClick={() => navigate('/jarvis')}
