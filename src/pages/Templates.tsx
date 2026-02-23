@@ -124,16 +124,24 @@ export default function Templates() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">
-              <span className="gradient-text">Templates</span>
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Mensagens prontas para copiar e usar
-            </p>
-          </div>
+        {/* Hero Header */}
+        <div className="relative overflow-hidden rounded-xl border border-border bg-card p-8">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          
+          <div className="relative flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="triade-symbol text-primary text-sm">✦</span>
+                <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Arsenal de Mensagens</span>
+              </div>
+              <h1 className="text-4xl font-display font-bold tracking-tight text-foreground mb-2">
+                <span className="gradient-text">Templates</span>
+              </h1>
+              <p className="text-muted-foreground max-w-md">
+                Mensagens estratégicas prontas para copiar e fechar negócios.
+              </p>
+            </div>
           <Dialog open={isOpen} onOpenChange={(open) => {
             setIsOpen(open);
             if (!open) {
