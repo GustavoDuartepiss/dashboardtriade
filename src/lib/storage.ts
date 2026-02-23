@@ -28,7 +28,7 @@ export interface Template {
 export interface Discount {
   id: string;
   period: 'mensal' | 'trimestral' | 'semestral' | 'anual';
-  type: 'parceria' | 'indicacao';
+  type: 'parceria' | 'indicacao' | 'fechamento';
   code: string;
   description: string;
   // NOVOS CAMPOS - POLÍTICA DE DESCONTOS
