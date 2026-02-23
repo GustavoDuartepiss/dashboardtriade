@@ -19,7 +19,8 @@ import {
   getCurrentMonthGoal, 
   calculateWorkingDaysRemaining, 
   calculateDailyGoal,
-  getTemplates
+  getTemplates,
+  getDiscounts
 } from '@/lib/storage';
 import { useNavigate } from 'react-router-dom';
 
