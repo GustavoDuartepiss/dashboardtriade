@@ -169,32 +169,47 @@ export default function Dashboard() {
             title="Progresso das Metas"
             icon={<Target className="h-5 w-5" />}
           >
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: 'Meta 1', value: stats.meta1, color: 'bg-primary' },
-                { label: 'Meta 2', value: stats.meta2, color: 'bg-success' },
-                { label: 'Meta 3', value: stats.meta3, color: 'bg-primary' },
+                { label: 'Meta 1', value: stats.meta1, colorClass: 'text-primary', barClass: 'bg-primary' },
+                { label: 'Meta 2', value: stats.meta2, colorClass: 'text-success', barClass: 'bg-success' },
+                { label: 'Meta 3', value: stats.meta3, colorClass: 'text-warning', barClass: 'bg-warning' },
               ].map((meta) => {
                 const progress = meta.value > 0 ? Math.min((stats.achieved / meta.value) * 100, 100) : 0;
                 const remaining = Math.max(meta.value - stats.achieved, 0);
+                const daily = stats.workingDays > 0 && remaining > 0 ? Math.ceil(remaining / stats.workingDays) : 0;
                 
                 return (
-                  <div key={meta.label} className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-foreground">{meta.label}</span>
-                      <span className="font-mono text-muted-foreground text-xs">
-                        R$ {stats.achieved.toLocaleString('pt-BR')} / R$ {meta.value.toLocaleString('pt-BR')}
+                  <div key={meta.label} className="rounded-lg border border-border bg-secondary/30 p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-semibold text-sm">{meta.label}</h4>
+                      <span className={`text-2xl font-bold font-mono ${meta.colorClass}`}>
+                        {progress.toFixed(0)}%
                       </span>
                     </div>
-                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
+
+                    <div className="h-3 bg-secondary rounded-full overflow-hidden">
                       <div 
-                        className={`h-full ${meta.color} rounded-full transition-all duration-700 ${progress > 0 ? 'progress-glow' : ''}`}
+                        className={`h-full ${meta.barClass} rounded-full transition-all duration-700 ${progress > 0 ? 'progress-glow' : ''}`}
                         style={{ width: `${progress}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{progress.toFixed(1)}%</span>
-                      <span>Falta: R$ {remaining.toLocaleString('pt-BR')}</span>
+
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <p className="text-muted-foreground">Meta</p>
+                        <p className="font-mono font-semibold">R$ {meta.value.toLocaleString('pt-BR')}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Falta</p>
+                        <p className="font-mono font-semibold">R$ {remaining.toLocaleString('pt-BR')}</p>
+                      </div>
+                      <div className="col-span-2 pt-2 border-t border-border">
+                        <p className="text-muted-foreground">Por dia</p>
+                        <p className="font-mono font-semibold text-base">
+                          R$ {daily.toLocaleString('pt-BR')}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
