@@ -42,6 +42,7 @@ export default function Dashboard() {
     const goal = getCurrentMonthGoal();
     const workingDays = calculateWorkingDaysRemaining();
     const templates = getTemplates();
+    const discountsList = getDiscounts();
 
     if (goal) {
       setStats({
