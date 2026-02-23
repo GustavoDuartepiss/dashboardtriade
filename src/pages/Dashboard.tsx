@@ -35,6 +35,7 @@ export default function Dashboard() {
     dailyGoal: 0,
     workingDays: 0,
     templatesCount: 0,
+    discountsCount: 0,
   });
 
   useEffect(() => {
