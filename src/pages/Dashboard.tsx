@@ -53,6 +53,7 @@ export default function Dashboard() {
         dailyGoal: calculateDailyGoal(goal.meta3, goal.achieved),
         workingDays,
         templatesCount: templates.length,
+        discountsCount: discountsList.length,
       });
 
       const newAlerts = [];
