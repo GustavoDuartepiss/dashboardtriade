@@ -183,6 +183,7 @@ export default function Descontos() {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Quick Select Filters */}

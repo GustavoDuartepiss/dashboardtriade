@@ -137,6 +137,7 @@ export default function Metas() {
               </Button>
             </div>
           )}
+          </div>
         </div>
 
         {/* Stats */}

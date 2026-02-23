@@ -202,6 +202,7 @@ export default function Templates() {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Filters */}
