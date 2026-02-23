@@ -109,6 +109,19 @@ export default function Dashboard() {
               <p className="text-muted-foreground max-w-md">
                 Monitore suas metas, gerencie estratégias e feche negócios com precisão.
               </p>
+              {/* Counters */}
+              <div className="flex gap-4 mt-4">
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-sm font-semibold text-foreground">{stats.templatesCount}</span>
+                  <span className="text-xs text-muted-foreground">Templates</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2">
+                  <Tag className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-sm font-semibold text-foreground">{stats.discountsCount}</span>
+                  <span className="text-xs text-muted-foreground">Cupons</span>
+                </div>
+              </div>
             </div>
             <Button 
               onClick={() => navigate('/jarvis')}
