@@ -123,7 +123,7 @@ export default function Templates() {
 
   return (
     <MainLayout>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Hero Header */}
         <div className="relative overflow-hidden rounded-xl border border-border bg-card p-8">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
