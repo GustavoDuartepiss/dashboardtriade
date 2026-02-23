@@ -69,7 +69,7 @@ export default function Dashboard() {
     } else {
       setStats({
         meta1: 0, meta2: 0, meta3: 0, achieved: 0,
-        dailyGoal: 0, workingDays, templatesCount: templates.length,
+        dailyGoal: 0, workingDays, templatesCount: templates.length, discountsCount: discountsList.length,
       });
       setAlerts([{
         id: '0',
