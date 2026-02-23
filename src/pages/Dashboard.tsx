@@ -6,7 +6,9 @@ import {
   Bot,
   Zap,
   ArrowUpRight,
-  Activity
+  Activity,
+  Tag,
+  FileText
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { StatCard } from '@/components/ui/StatCard';
