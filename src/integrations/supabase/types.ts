@@ -14,7 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      daily_metrics: {
+        Row: {
+          avg_ticket: number | null
+          clients_annual: number | null
+          clients_monthly: number | null
+          clients_quarterly: number | null
+          clients_semiannual: number | null
+          closer_name: string | null
+          conversion_rate: number | null
+          created_at: string
+          day: number
+          id: string
+          month: number
+          nmrr_annual: number | null
+          nmrr_monthly: number | null
+          nmrr_quarterly: number | null
+          nmrr_semiannual: number | null
+          nmrr_total: number | null
+          pipedrive_clients: number | null
+          portal_clients: number | null
+          score: number | null
+          year: number
+        }
+        Insert: {
+          avg_ticket?: number | null
+          clients_annual?: number | null
+          clients_monthly?: number | null
+          clients_quarterly?: number | null
+          clients_semiannual?: number | null
+          closer_name?: string | null
+          conversion_rate?: number | null
+          created_at?: string
+          day: number
+          id?: string
+          month: number
+          nmrr_annual?: number | null
+          nmrr_monthly?: number | null
+          nmrr_quarterly?: number | null
+          nmrr_semiannual?: number | null
+          nmrr_total?: number | null
+          pipedrive_clients?: number | null
+          portal_clients?: number | null
+          score?: number | null
+          year: number
+        }
+        Update: {
+          avg_ticket?: number | null
+          clients_annual?: number | null
+          clients_monthly?: number | null
+          clients_quarterly?: number | null
+          clients_semiannual?: number | null
+          closer_name?: string | null
+          conversion_rate?: number | null
+          created_at?: string
+          day?: number
+          id?: string
+          month?: number
+          nmrr_annual?: number | null
+          nmrr_monthly?: number | null
+          nmrr_quarterly?: number | null
+          nmrr_semiannual?: number | null
+          nmrr_total?: number | null
+          pipedrive_clients?: number | null
+          portal_clients?: number | null
+          score?: number | null
+          year?: number
+        }
+        Relationships: []
+      }
+      monthly_summaries: {
+        Row: {
+          confirmed_clients: number | null
+          confirmed_clients_pct: number | null
+          confirmed_revenue: number | null
+          created_at: string
+          discounts: number | null
+          id: string
+          month: number
+          mrr: number | null
+          pending_clients: number | null
+          pending_revenue: number | null
+          plan_type: string
+          score: number | null
+          year: number
+        }
+        Insert: {
+          confirmed_clients?: number | null
+          confirmed_clients_pct?: number | null
+          confirmed_revenue?: number | null
+          created_at?: string
+          discounts?: number | null
+          id?: string
+          month: number
+          mrr?: number | null
+          pending_clients?: number | null
+          pending_revenue?: number | null
+          plan_type: string
+          score?: number | null
+          year: number
+        }
+        Update: {
+          confirmed_clients?: number | null
+          confirmed_clients_pct?: number | null
+          confirmed_revenue?: number | null
+          created_at?: string
+          discounts?: number | null
+          id?: string
+          month?: number
+          mrr?: number | null
+          pending_clients?: number | null
+          pending_revenue?: number | null
+          plan_type?: string
+          score?: number | null
+          year?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

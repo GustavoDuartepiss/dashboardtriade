@@ -14,6 +14,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { StatCard } from '@/components/ui/StatCard';
 import { JarvisCard } from '@/components/ui/JarvisCard';
 import { AlertBanner } from '@/components/ui/AlertBanner';
+import { ComparativoDesempenho } from '@/components/dashboard/ComparativoDesempenho';
 import { Button } from '@/components/ui/button';
 import { 
   getCurrentMonthGoal, 
@@ -269,6 +270,9 @@ export default function Dashboard() {
             </div>
           </JarvisCard>
         </div>
+
+        {/* Comparativo de Desempenho */}
+        <ComparativoDesempenho />
       </div>
     </MainLayout>
   );
