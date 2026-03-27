@@ -8,7 +8,8 @@ import {
   Bot,
   Menu,
   X,
-  Settings
+  Settings,
+  Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,7 @@ const navItems = [
   { path: '/templates', label: 'Templates', icon: FileText },
   { path: '/descontos', label: 'Descontos', icon: Percent },
   { path: '/metas', label: 'Metas', icon: Target },
+  { path: '/importar', label: 'Importar Dados', icon: Upload },
   { path: '/jarvis', label: 'Jarvis IA', icon: Bot },
   { path: '/configuracoes', label: 'Configurações', icon: Settings },
 ];

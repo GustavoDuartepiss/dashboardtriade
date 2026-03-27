@@ -9,6 +9,7 @@ import Descontos from "./pages/Descontos";
 import Metas from "./pages/Metas";
 import Jarvis from "./pages/Jarvis";
 import Configuracoes from "./pages/Configuracoes";
+import ImportarDados from "./pages/ImportarDados";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/templates" element={<Templates />} />
           <Route path="/descontos" element={<Descontos />} />
           <Route path="/metas" element={<Metas />} />
+          <Route path="/importar" element={<ImportarDados />} />
           <Route path="/jarvis" element={<Jarvis />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="*" element={<NotFound />} />
