@@ -306,6 +306,9 @@ export default function Metas() {
             </div>
           </>
         )}
+
+        {/* Módulos - Metas por Unidade */}
+        <ModulosSection />
       </div>
     </MainLayout>
   );
