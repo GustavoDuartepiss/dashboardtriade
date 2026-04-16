@@ -51,6 +51,17 @@ export interface Goal {
   createdAt: string;
 }
 
+export interface ModuleGoal {
+  id: string;
+  month: number;
+  year: number;
+  name: string;
+  target: number; // meta em unidades
+  achieved: number; // conquistado em unidades
+  createdAt: string;
+}
+
+
 // OBJEÇÃO EXPANDIDA - UNIDADE DE DECISÃO
 export interface Objection {
   id: string;
@@ -195,6 +206,7 @@ const STORAGE_KEYS = {
   leadScoreRules: 'jarvis_lead_score_rules',
   leadScoreConfig: 'jarvis_lead_score_config',
   oteConfig: 'jarvis_ote_config',
+  moduleGoals: 'jarvis_module_goals',
 };
 
 // ============================================
