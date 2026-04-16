@@ -449,6 +449,46 @@ export function updateGoal(id: string, data: Partial<Goal>): void {
 }
 
 // ============================================
+// MODULE GOALS - METAS POR UNIDADE (MÓDULOS)
+// ============================================
+
+export function getModuleGoals(): ModuleGoal[] {
+  return getFromStorage<ModuleGoal>(STORAGE_KEYS.moduleGoals, []);
+}
+
+export function getCurrentMonthModuleGoals(): ModuleGoal[] {
+  const goals = getModuleGoals();
+  const now = new Date();
+  return goals.filter(g => g.month === now.getMonth() && g.year === now.getFullYear());
+}
+
+export function saveModuleGoal(goal: Omit<ModuleGoal, 'id' | 'createdAt'>): ModuleGoal {
+  const goals = getModuleGoals();
+  const newGoal: ModuleGoal = {
+    ...goal,
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+  };
+  goals.push(newGoal);
+  saveToStorage(STORAGE_KEYS.moduleGoals, goals);
+  return newGoal;
+}
+
+export function updateModuleGoal(id: string, data: Partial<ModuleGoal>): void {
+  const goals = getModuleGoals();
+  const index = goals.findIndex(g => g.id === id);
+  if (index !== -1) {
+    goals[index] = { ...goals[index], ...data };
+    saveToStorage(STORAGE_KEYS.moduleGoals, goals);
+  }
+}
+
+export function deleteModuleGoal(id: string): void {
+  const goals = getModuleGoals().filter(g => g.id !== id);
+  saveToStorage(STORAGE_KEYS.moduleGoals, goals);
+}
+
+// ============================================
 // OBJECTIONS - UNIDADES DE DECISÃO
 // ============================================
 
