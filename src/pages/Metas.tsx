@@ -3,6 +3,7 @@ import { Target, Calendar, TrendingUp, Calculator } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { JarvisCard } from '@/components/ui/JarvisCard';
 import { StatCard } from '@/components/ui/StatCard';
+import { ModulosSection } from '@/components/metas/ModulosSection';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -305,6 +306,9 @@ export default function Metas() {
             </div>
           </>
         )}
+
+        {/* Módulos - Metas por Unidade */}
+        <ModulosSection />
       </div>
     </MainLayout>
   );
